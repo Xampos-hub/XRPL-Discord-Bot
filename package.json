@@ -1,0 +1,30 @@
+{
+  "name": "xrpl-bot",
+  "version": "1.0.0",
+  "description": "XRPL Discord Bot with Wallet Features",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js"
+  },
+  "keywords": [
+    "xrpl",
+    "discord",
+    "bot",
+    "wallet"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^1.7.0",
+    "@discordjs/rest": "^2.2.0",
+    "bip39": "^3.1.0",
+    "discord-api-types": "^0.37.61",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "pdfkit": "^0.13.0",
+    "qrcode": "^1.5.4",
+    "xrpl": "^2.14.0"
+  }
+}
