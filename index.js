@@ -1,0 +1,1150 @@
+import 'dotenv/config';
+import { 
+    Client, 
+    GatewayIntentBits, 
+    Collection, 
+    EmbedBuilder, 
+    AttachmentBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    StringSelectMenuBuilder
+} from 'discord.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { handleCheckBalance } from './features/checkBalance.js';
+import { handleTransactionHistory } from './features/transactionHistory.js';
+import { handleEscrowStatus } from './features/escrowStatus.js';
+import { handleNFTHoldings } from './features/nftHoldings.js';
+import { handleTransactionDecode } from './features/transactionDecoder.js';
+import { handleCreateWallet, handleWalletInfoDownload } from './features/createWallet.js';
+import QRCode from 'qrcode';
+import { 
+    showConnectWalletOptions, 
+    showConnectWalletModal, 
+    handleConnectWallet, 
+    showWalletManagement,
+    showDisconnectWalletSelector,
+    disconnectWallet
+} from './features/walletManager.js';
+import {
+    handleNFTLookup,
+    handleNFTRarity,
+    handleNFTCollection,
+    handleNFTPortfolio,
+    handleNFTCompare,
+    handleNFTMarket,
+    handleNFTHub,
+    processNFTLookup,
+    processNFTRarity,
+    processNFTCollection,
+    processNFTPortfolio,
+    processNFTCompare
+} from './features/nftAnalyzer.js';
+import { createConnectionRequest, checkConnectionStatus } from './features/xamanIntegration.js';
+import trustLineManager from './features/trustLineManager.js';
+import {
+    handleOrderBook,
+    handleQuickTrade,
+    handleMyOrders,
+    handleOrderBookPairSelect,
+    handleQuickTradeType,
+    handleQuickTradePair,
+    handleCancelOrder,
+    processQuickTrade,
+    processCancelOrder
+} from './features/dexTrading.js';
+import { setupWalletSessionTimeout } from './features/walletManager.js';
+import {
+    handlePhishingCheck,
+    handleTransactionVerification,
+    handleSecurityAudit,
+    handleActivityMonitor,
+    handleTrustlineSafety,
+    handleSecurityResources,
+    processPhishingCheck,
+    processTransactionVerification,
+    processSecurityAudit,
+    processActivityMonitor,
+    processTrustlineSafety
+} from './features/securityTools.js';
+import {
+    handleViewChannels,
+    handleCreateChannel,
+    processCreateChannel,
+    handleSendMicropayment,
+    handleChannelSelection,
+    processMicropayment,
+    handleChannelAnalytics,
+    handleSettleChannel,
+    handleSettleSelection,
+    processChannelSettlement,
+    handleChannelDetails,
+    handleAddFunds,
+    processAddFunds,
+    handleCancelSettlement
+} from './features/paymentChannelsManager.js';
+import {
+    handleCBDCInfo,
+    handleCBDCBalance,
+    handleCBDCSwap,
+    handleCBDCCompliance,
+    handleCBDCChannels,
+    handleCBDCAnalytics,
+    showCBDCDetails,
+    showCBDCBalanceCheck,
+    handleCBDCSwapFrom,
+    showCBDCSwapInterface,
+    showSwapAmountModal,
+    processSwapAmount,
+    showCBDCCompliance,
+    showCBDCChannelSetup,
+    processCBDCBalanceCheck
+} from './features/cbdcManager.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
+});
+
+client.commands = new Collection();
+
+const commandFiles = fs.readdirSync('./interactions/commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = await import(`./interactions/commands/${file}`);
+    client.commands.set(command.default.data.name, command.default);
+}
+
+// Direct balance check without asking for address
+async function handleDirectBalanceCheck(interaction, address) {
+    try {
+        await interaction.deferReply({ ephemeral: true });
+        
+        const client = new xrpl.Client("wss://s1.ripple.com");
+        await client.connect();
+        
+        const accountInfo = await client.request({
+            command: "account_info",
+            account: address,
+            ledger_index: "validated"
+        });
+        const accountLines = await client.request({
+            command: "account_lines",
+            account: address
+        });
+        const balanceEmbed = new EmbedBuilder()
+            .setColor('#00ff00')
+            .setTitle('💰 Wallet Balance')
+            .setDescription(`Balance information for your connected wallet`)
+            .addFields(
+                { name: 'Wallet Address', value: `\`${address}\`` },
+                { name: 'XRP Balance', value: `${xrpl.dropsToXrp(accountInfo.result.account_data.Balance)} XRP` }
+            );
+
+        if (accountLines.result.lines.length > 0) {
+            accountLines.result.lines.forEach(line => {
+                let formattedBalance = line.balance;
+                let tokenName = line.currency;
+                
+                if (tokenName.length === 40) {
+                    try {
+                        tokenName = Buffer.from(tokenName, 'hex').toString('utf-8').replace(/\0/g, '');
+                    } catch (e) {
+                        tokenName = line.currency;
+                    }
+                }
+                
+                const num = parseFloat(formattedBalance);
+                if (Math.abs(num) < 1 && num !== 0) {
+                    formattedBalance = num.toFixed(8);
+                } else {
+                    formattedBalance = num.toFixed(2);
+                }
+                
+                formattedBalance = formattedBalance.replace(/\.?0+$/, '');
+                
+                balanceEmbed.addFields({
+                    name: `${tokenName}`,
+                    value: `${formattedBalance} ${tokenName}\nIssuer: ${line.account.substring(0, 12)}...`
+                });
+            });
+        }
+        await interaction.editReply({ embeds: [balanceEmbed] });
+        await client.disconnect();
+    } catch (error) {
+        console.error('Error in direct balance check:', error);
+        await interaction.editReply({ 
+            content: 'Error fetching balance: ' + error.message, 
+            ephemeral: true 
+        });
+    }
+}
+
+// Direct transaction history without asking for address
+async function handleDirectTransactionHistory(interaction, address) {
+    try {
+        await interaction.deferReply({ ephemeral: true });
+        
+        const client = new xrpl.Client("wss://s1.ripple.com");
+        await client.connect();
+        
+        const response = await client.request({
+            command: "account_tx",
+            account: address,
+            limit: 5,
+            binary: false
+        });
+        const txEmbed = new EmbedBuilder()
+            .setColor('#0099ff')
+            .setTitle('💫 Transaction History')
+            .setDescription(`Recent transactions for your connected wallet`);
+
+        if (response.result.transactions && response.result.transactions.length > 0) {
+            response.result.transactions.forEach((tx) => {
+                let details = '';
+                
+                // Check if transaction exists and has type
+                if (tx && tx.tx) {
+                    switch(tx.tx.TransactionType) {
+                        case 'Payment':
+                            details += '💸 Payment\n';
+                            break;
+                        case 'OfferCreate':
+                            details += '📈 Offer Created\n';
+                            break;
+                        case 'OfferCancel':
+                            details += '📉 Offer Cancelled\n';
+                            break;
+                        default:
+                            details += '🔄 Other Transaction\n';
+                    }
+                    
+                    if (tx.tx.Amount) {
+                        const amount = typeof tx.tx.Amount === 'string' ? 
+                            Number(tx.tx.Amount) / 1000000 : 
+                            tx.tx.Amount.value;
+                        details += `💰 Amount: ${amount} XRP\n`;
+                    }
+                    
+                    if (tx.tx.Destination) {
+                        details += `📤 To: ${tx.tx.Destination.substring(0, 12)}...`;
+                    }
+                    txEmbed.addFields({
+                        name: `Transaction`,
+                        value: `\`\`\`${details}\`\`\``
+                    });
+                }
+            });
+        } else {
+            txEmbed.addFields({
+                name: 'No Transactions',
+                value: 'No recent transactions found'
+            });
+        }
+        await interaction.editReply({ embeds: [txEmbed] });
+        await client.disconnect();
+    } catch (error) {
+        console.error('Error in direct transaction history:', error);
+        await interaction.editReply({ 
+            content: 'Error fetching transactions: ' + error.message, 
+            ephemeral: true 
+        });
+    }
+}
+
+// Direct trust lines without asking for address
+async function handleDirectTrustLines(interaction, address) {
+    try {
+        await interaction.deferReply({ ephemeral: true });
+        
+        const client = new xrpl.Client("wss://s1.ripple.com");
+        await client.connect();
+        
+        const accountLines = await client.request({
+            command: "account_lines",
+            account: address
+        });
+        const trustEmbed = new EmbedBuilder()
+            .setColor('#00ff00')
+            .setTitle('🤝 Trust Lines')
+            .setDescription(`Trust lines for your connected wallet`);
+
+        if (accountLines.result.lines.length > 0) {
+            accountLines.result.lines.forEach((line, index) => {
+                let tokenName = line.currency;
+                
+                if (tokenName.length === 40) {
+                    try {
+                        tokenName = Buffer.from(tokenName, 'hex').toString('utf-8').replace(/\0/g, '');
+                    } catch (e) {
+                        tokenName = line.currency;
+                    }
+                }
+                
+                trustEmbed.addFields({
+                    name: `${tokenName}`,
+                    value: `Issuer: ${line.account.substring(0, 12)}...\nLimit: ${line.limit}\nBalance: ${line.balance}`
+                });
+            });
+        } else {
+            trustEmbed.addFields({
+                name: 'No Trust Lines',
+                value: 'No trust lines found for this wallet'
+            });
+        }
+        await interaction.editReply({ embeds: [trustEmbed] });
+        await client.disconnect();
+    } catch (error) {
+        console.error('Error in direct trust lines:', error);
+        await interaction.editReply({ 
+            content: 'Error fetching trust lines: ' + error.message, 
+            ephemeral: true 
+        });
+    }
+}
+
+client.on('interactionCreate', async interaction => {
+    if (interaction.isChatInputCommand()) {
+        console.log(`Command executed: ${interaction.commandName}`);
+        
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(`Error executing command ${interaction.commandName}:`, error);
+            await interaction.reply({ 
+                content: 'There was an error executing this command!', 
+                ephemeral: true 
+            });
+        }
+    }
+
+    if (interaction.isButton()) {
+        console.log(`Button interaction received: ${interaction.customId}`);
+        
+        try {
+            // Handle specific button cases with switch
+            switch (interaction.customId) {
+                case 'save_wallet_info':
+                    await handleWalletInfoDownload(interaction);
+                    break;
+                
+                case 'download_qr':
+                    try {
+                        const message = interaction.message;
+                        const embed = message.embeds[0];
+                        const address = embed.fields.find(f => f.name === '📬 Public Address').value.replace(/`/g, '');
+                        
+                        // Generate a fresh QR code
+                        const qrBuffer = await QRCode.toBuffer(address);
+                        const qrAttachment = new AttachmentBuilder(qrBuffer, { 
+                            name: `XRPL_QR_${address.substring(0, 8)}.png`,
+                            description: `QR Code for XRPL wallet ${address}`
+                        });
+
+                        await interaction.reply({
+                            content: `Here's your QR code for address ${address.substring(0, 8)}...`,
+                            files: [qrAttachment],
+                            ephemeral: true
+                        });
+                    } catch (error) {
+                        console.error('QR Download Error:', error);
+                        await interaction.reply({
+                            content: "Failed to download QR code. Please try again.",
+                            ephemeral: true
+                        });
+                    }
+                    break;
+
+                case 'check_balance':
+                    const modal = new ModalBuilder()
+                        .setCustomId('balance_modal')
+                        .setTitle('Check Wallet Balance');
+
+                    const addressInput = new TextInputBuilder()
+                        .setCustomId('address_input')
+                        .setLabel('Enter XRPL Address')
+                        .setStyle(TextInputStyle.Short)
+                        .setPlaceholder('rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+                        .setRequired(true);
+
+                    const firstActionRow = new ActionRowBuilder().addComponents(addressInput);
+                    modal.addComponents(firstActionRow);
+                    await interaction.showModal(modal);
+                    break;
+
+                case 'nft_lookup':
+                    await handleNFTLookup(interaction);
+                    break;
+
+                case 'nft_rarity':
+                    await handleNFTRarity(interaction);
+                    break;
+
+                case 'view_trust_lines':
+                    await trustLineManager.handleTrustLineManager(interaction);
+                    break;
+
+                case 'add_trust':
+                    await trustLineManager.handleAddTrust(interaction);
+                    break;
+                
+                case 'remove_trust':
+                    await trustLineManager.handleRemoveTrust(interaction);
+                    break;
+                
+                case 'modify_limit':
+                    await trustLineManager.handleModifyLimit(interaction);
+                    break;
+
+                case 'transaction_history':
+                    const txModal = new ModalBuilder()
+                        .setCustomId('tx_modal')
+                        .setTitle('View Transaction History');
+
+                                    const txAddressInput = new TextInputBuilder()
+                                        .setCustomId('tx_address_input')
+                                        .setLabel('Enter XRPL Address')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+                                        .setRequired(true)
+
+                                    const txActionRow = new ActionRowBuilder().addComponents(txAddressInput)
+                                    txModal.addComponents(txActionRow)
+                                    await interaction.showModal(txModal)
+                                    break
+
+                                case 'escrow_status':
+                                    const escrowModal = new ModalBuilder()
+                                        .setCustomId('escrow_modal')
+                                        .setTitle('Check Escrow Status')
+
+                                    const escrowAddressInput = new TextInputBuilder()
+                                        .setCustomId('escrow_address_input')
+                                        .setLabel('Enter XRPL Address')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+                                        .setRequired(true)
+
+                                    const escrowActionRow = new ActionRowBuilder().addComponents(escrowAddressInput)
+                                    escrowModal.addComponents(escrowActionRow)
+                                    await interaction.showModal(escrowModal)
+                                    break
+
+                                case 'nft_holdings':
+                                    const nftModal = new ModalBuilder()
+                                        .setCustomId('nft_modal')
+                                        .setTitle('View NFT Holdings')
+
+                                    const nftAddressInput = new TextInputBuilder()
+                                        .setCustomId('nft_address_input')
+                                        .setLabel('Enter XRPL Address')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+                                        .setRequired(true)
+
+                                    const nftActionRow = new ActionRowBuilder().addComponents(nftAddressInput)
+                                    nftModal.addComponents(nftActionRow)
+                                    await interaction.showModal(nftModal)
+                                    break
+
+                                case 'decode_transaction':
+                                    const decodeModal = new ModalBuilder()
+                                        .setCustomId('decode_modal')
+                                        .setTitle('Decode Transaction')
+
+                                    const hashInput = new TextInputBuilder()
+                                        .setCustomId('tx_hash_input')
+                                        .setLabel('Enter Transaction Hash')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('Enter the transaction hash to decode')
+                                        .setRequired(true)
+
+                                    const hashRow = new ActionRowBuilder().addComponents(hashInput)
+                                    decodeModal.addComponents(hashRow)
+                                    await interaction.showModal(decodeModal)
+                                    break
+
+                                case 'create_wallet':
+                                    await handleCreateWallet(interaction)
+                                    break
+
+                                case 'connect_wallet':
+                                    await showConnectWalletOptions(interaction)
+                                    break
+
+                                case 'connect_with_xaman':
+                                    await createConnectionRequest(interaction)
+                                    break
+
+                                case 'connect_with_seed':
+                                    await showConnectWalletModal(interaction)
+                                    break
+                
+                                case 'manage_wallets':
+                                    await showWalletManagement(interaction)
+                                    break
+
+                                case 'disconnect_wallet':
+                                    await showDisconnectWalletSelector(interaction)
+                                    break
+
+                                case 'quick_trade':
+                                    await handleQuickTrade(interaction)
+                                    break
+                
+                                case 'order_book':
+                                    await handleOrderBook(interaction)
+                                    break
+                
+                                case 'my_orders':
+                                    await handleMyOrders(interaction)
+                                    break
+                
+                                case 'quick_trade_buy':
+                                    await handleQuickTradeType(interaction, 'buy')
+                                    break
+                
+                                case 'quick_trade_sell':
+                                    await handleQuickTradeType(interaction, 'sell')
+                                    break
+                
+                                case 'cancel_order':
+                                    await handleCancelOrder(interaction)
+                                    break
+                
+                                case 'refresh_my_orders':
+                                    await handleMyOrders(interaction)
+                                    break
+                
+                                case 'token_swap':
+                                    await initializeSwap(interaction)
+                                    break
+
+                                case 'select_from_token':
+                                    await handleTokenSelection(interaction, 'from')
+                                    break
+
+                                case 'search_token_from':
+                                    await showTokenSearchModal(interaction, 'from')
+                                    break
+                
+                                case 'search_token_to':
+                                    await showTokenSearchModal(interaction, 'to')
+                                    break
+
+                                case 'back_to_token_selection_from':
+                                    await showTokenSelectionInterface(interaction, 'from')
+                                    break
+                
+                                case 'back_to_token_selection_to':
+                                    await showTokenSelectionInterface(interaction, 'to')
+                                    break
+
+                                case 'phishing_check':
+                                    await handlePhishingCheck(interaction)
+                                    break
+
+                                case 'verify_transaction':
+                                    await handleTransactionVerification(interaction)
+                                    break
+
+                                case 'security_audit':
+                                    await handleSecurityAudit(interaction)
+                                    break
+
+                                case 'activity_monitor':
+                                    await handleActivityMonitor(interaction)
+                                    break
+
+                                case 'trustline_safety':
+                                    await handleTrustlineSafety(interaction)
+                                    break
+
+                                case 'security_resources':
+                                    await handleSecurityResources(interaction)
+                                    break
+                
+                                case 'view_channels':
+                                    await handleViewChannels(interaction)
+                                    break
+
+                                case 'create_channel':
+                                    await handleCreateChannel(interaction)
+                                    break
+
+                                case 'send_micropayment':
+                                    await handleSendMicropayment(interaction)
+                                    break
+
+                                case 'channel_analytics':
+                                    await handleChannelAnalytics(interaction)
+                                    break
+
+                                case 'settle_channel':
+                                    await handleSettleChannel(interaction)
+                                    break
+
+                                case 'cancel_settle':
+                                    await handleCancelSettlement(interaction)
+                                    break
+
+                                case 'cbdc_info':
+                                    await handleCBDCInfo(interaction)
+                                    break
+
+                                case 'cbdc_balance':
+                                    await handleCBDCBalance(interaction)
+                                    break
+
+                                case 'cbdc_swap':
+                                    await handleCBDCSwap(interaction)
+                                    break
+
+                                case 'cbdc_compliance':
+                                    await handleCBDCCompliance(interaction)
+                                    break
+
+                                case 'cbdc_channels':
+                                    await handleCBDCChannels(interaction)
+                                    break
+
+                                case 'cbdc_analytics':
+                                    await handleCBDCAnalytics(interaction)
+                                    break
+                            }
+
+                            // Handle wallet selection for trust line operations
+                            if (interaction.customId.startsWith('select_wallet_')) {
+                                await trustLineManager.handleWalletSelection(interaction)
+                            }
+            
+                            // Handle connection status check
+                            if (interaction.customId.startsWith('check_connection_')) {
+                                const connectionId = interaction.customId.replace('check_connection_', '')
+                                await checkConnectionStatus(interaction, connectionId)
+                            }
+            
+                            // Handle wallet disconnection
+                            if (interaction.customId.startsWith('remove_wallet_')) {
+                                const address = interaction.customId.replace('remove_wallet_', '')
+                                await disconnectWallet(interaction, address)
+                            }
+            
+                            // Handle order book refresh
+                            if (interaction.customId.startsWith('refresh_order_book_')) {
+                                const pairName = interaction.customId.replace('refresh_order_book_', '')
+                                const pair = { name: pairName }
+                                await handleOrderBookPairSelect(interaction, pair)
+                            }
+            
+                            // Handle quick trade pair selection
+                            if (interaction.customId.startsWith('quick_trade_pair_')) {
+                                const tradeType = interaction.customId.replace('quick_trade_pair_', '')
+                                await handleQuickTradePair(interaction, tradeType)
+                            }
+            
+                            // Handle token selection
+                            if (interaction.customId.startsWith('select_token_')) {
+                                const parts = interaction.customId.split('_')
+                                const selectionType = parts[2]
+                                const currency = parts[3]
+                                const issuer = parts.slice(4).join('_') || ''; // Handle empty issuer for XRP
+                                await handleTokenSelection(interaction, selectionType, currency, issuer)
+                            }
+            
+                            // Handle exchange rate check
+                            if (interaction.customId.startsWith('check_rate_')) {
+                                const parts = interaction.customId.split('_')
+                                const fromCurrency = parts[2]
+                                const fromIssuer = parts[3] || ''
+                                const toCurrency = parts[4]
+                                const toIssuer = parts[5] || ''
+                                await checkExchangeRate(interaction, fromCurrency, fromIssuer, toCurrency, toIssuer)
+                            }
+            
+                            // Handle swap amount modal
+                            if (interaction.customId.startsWith('swap_amount_')) {
+                                console.log('Swap amount button clicked:', interaction.customId)
+                                const parts = interaction.customId.split('_')
+                                const fromTokenIndex = parts[2]
+                                const toTokenIndex = parts[3]
+                
+                                console.log(`Showing amount input modal: from=${fromTokenIndex}, to=${toTokenIndex}`)
+                                await showAmountInputModal(interaction, fromTokenIndex, toTokenIndex)
+                            }
+            
+                            // Handle back to swap interface
+                            if (interaction.customId.startsWith('back_to_swap_')) {
+                                const parts = interaction.customId.split('_')
+                                const fromCurrency = parts[3]
+                                const fromIssuer = parts[4] || ''
+                                const toCurrency = parts[5]
+                                const toIssuer = parts[6] || ''
+                
+                                // Recreate the token objects
+                                const fromToken = {
+                                    currency: fromCurrency,
+                                    issuer: fromIssuer,
+                                    name: fromCurrency === 'XRP' ? 'XRP (Native)' : `${fromCurrency} (${fromIssuer.substring(0, 4)}...)`
+                                }
+                
+                                const toToken = {
+                                    currency: toCurrency,
+                                    issuer: toIssuer,
+                                    name: toCurrency === 'XRP' ? 'XRP (Native)' : `${toCurrency} (${toIssuer.substring(0, 4)}...)`
+                                }
+                
+                                await showSwapInterface(interaction, fromToken, toToken)
+                            }
+            
+                            // Handle swap execution
+                            if (interaction.customId.startsWith('execute_swap_')) {
+                                const parts = interaction.customId.split('_')
+                                const fromCurrency = parts[2]
+                                const fromIssuer = parts[3] || ''
+                                const toCurrency = parts[4]
+                                const toIssuer = parts[5] || ''
+                                const fromAmount = parts[6]
+                                const walletAddress = parts[7]
+                
+                                await executeSwap(interaction, fromCurrency, fromIssuer, toCurrency, toIssuer, fromAmount, walletAddress)
+                            }
+            
+                            // Handle cancel order
+                            if (interaction.customId.startsWith('cancel_order_')) {
+                                const sequence = interaction.customId.replace('cancel_order_', '')
+                                await processCancelOrder(interaction, sequence)
+                            }
+            
+                            if (interaction.customId.startsWith('select_token_from_')) {
+                                console.log('From token selected:', interaction.customId)
+                                const tokenIndex = interaction.customId.replace('select_token_from_', '')
+                
+                                // Store the selected "from" token
+                                interaction.client.fromTokenIndex = tokenIndex
+                
+                                // IMPORTANT: Check if the interaction has already been deferred
+                                try {
+                                    // Only defer if not already deferred
+                                    if (!interaction.deferred && !interaction.replied) {
+                                        await interaction.deferUpdate()
+                                    }
+                    
+                                    const toSelectionEmbed = new EmbedBuilder()
+                                        .setColor('#0099ff')
+                                        .setTitle('Select Destination Token')
+                                        .setDescription('Choose which token you want to receive')
+                                        .setTimestamp()
+                    
+                                    // Create buttons for token selection using our static list
+                                    const rows = []
+                                    let currentRow = new ActionRowBuilder()
+                                    let buttonCount = 0
+                    
+                                    // Import the token list
+                                    const { tokenList } = await import('./data/tokenList.js')
+                    
+                                    // Add buttons for each token in our static list
+                                    for (let i = 0; i < tokenList.length; i++) {
+                                        const token = tokenList[i]
+                        
+                                        // Format the button label
+                                        const buttonLabel = token.shortName || token.name
+                        
+                                        currentRow.addComponents(
+                                          new ButtonBuilder()
+                                            .setCustomId(`select_token_to_${i}`)
+                                            .setLabel(buttonLabel)
+                                            .setEmoji(token.icon || "🪙")
+                                            .setStyle(ButtonStyle.Primary)
+                                        )
+                        
+                                        buttonCount++
+                        
+                                        // Create a new row after every 3 buttons
+                                        if (buttonCount % 3 === 0) {
+                                          rows.push(currentRow)
+                                          currentRow = new ActionRowBuilder()
+                                        }
+                                    }
+                    
+                                    // Add the last row if it has any buttons
+                                    if (currentRow.components.length > 0) {
+                                      rows.push(currentRow)
+                                    }
+                    
+                                    // Add navigation buttons if needed
+                                    if (rows.length > 0) {
+                                      const navRow = new ActionRowBuilder()
+                                        .addComponents(
+                                          new ButtonBuilder()
+                                            .setCustomId('token_swap')
+                                            .setLabel('Back')
+                                            .setStyle(ButtonStyle.Secondary)
+                                        )
+                      
+                                      rows.push(navRow)
+                                    }
+                    
+                                    // Use editReply instead of reply since we've already deferred
+                                    async function safeReply(interaction, options) {
+                                      try {
+                                        if (interaction.deferred) {
+                                          return await interaction.editReply(options)
+                                        } else if (interaction.replied) {
+                                          return await interaction.followUp(options)
+                                        } else {
+                                          return await interaction.reply(options)
+                                        }
+                                      } catch (error) {
+                                        console.error('Error in safeReply:', error)
+                                      }
+                                    }
+                                    await safeReply(interaction, {
+                                      embeds: [toSelectionEmbed],
+                                      components: rows,
+                                      ephemeral: true
+                                    })
+                                } catch (error) {
+                                    console.error('Error handling from token selection:', error)
+                                    // Handle the error appropriately
+                                }
+                            }
+            
+                            if (interaction.customId.startsWith('select_token_to_')) {
+                                console.log('To token selected:', interaction.customId)
+                                const toTokenIndex = interaction.customId.replace('select_token_to_', '')
+                                const fromTokenIndex = interaction.client.fromTokenIndex
+                
+                                if (!fromTokenIndex) {
+                                    await interaction.reply({
+                                        content: 'Error: Source token not selected. Please start over.',
+                                        ephemeral: true
+                                    });
+                                    return;
+                                }
+                                
+                                await showSwapInterface(interaction, fromTokenIndex, toTokenIndex);
+                            }
+                            
+                            // Direct balance check (no modal)
+                            if (interaction.customId.startsWith('direct_balance_')) {
+                                const address = interaction.customId.replace('direct_balance_', '');
+                                await handleDirectBalanceCheck(interaction, address);
+                            }
+                            
+                            // Direct transaction history (no modal)
+                            if (interaction.customId.startsWith('direct_history_')) {
+                                const address = interaction.customId.replace('direct_history_', '');
+                                await handleDirectTransactionHistory(interaction, address);
+                            }
+                            
+                            // Direct trust lines (no modal)
+                            if (interaction.customId.startsWith('direct_trustlines_')) {
+                                const address = interaction.customId.replace('direct_trustlines_', '');
+                                await handleDirectTrustLines(interaction, address);
+                            }
+                            
+                            // Payment Channels buttons
+                            if (interaction.customId.startsWith('channel_details_')) {
+                                await handleChannelDetails(interaction);
+                            } else if (interaction.customId.startsWith('send_payment_')) {
+                                const channelIndex = interaction.customId.replace('send_payment_', '');
+                                // If it's a new channel, handle differently
+                                if (channelIndex.startsWith('new_')) {
+                                    const newIndex = channelIndex.replace('new_', '');
+                                    await handleSendMicropayment(interaction);
+                                } else {
+                                    // Create a modal for sending payment to this specific channel
+                                    const modal = new ModalBuilder()
+                                        .setCustomId(`micropayment_modal_${channelIndex}`)
+                                        .setTitle('Send Micropayment');
+                                        
+                                    const amountInput = new TextInputBuilder()
+                                        .setCustomId('micropayment_amount')
+                                        .setLabel('Amount (XRP)')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('Enter amount (e.g. 0.001)')
+                                        .setRequired(true);
+                                        
+                                    const memoInput = new TextInputBuilder()
+                                        .setCustomId('micropayment_memo')
+                                        .setLabel('Memo/Description')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('What is this payment for?')
+                                        .setRequired(false);
+                                        
+                                    const rows = [
+                                        new ActionRowBuilder().addComponents(amountInput),
+                                        new ActionRowBuilder().addComponents(memoInput)
+                                    ];
+                                    
+                                    modal.addComponents(rows);
+                                    await interaction.showModal(modal);
+                                }
+                            } else if (interaction.customId.startsWith('close_channel_') ||
+                                        interaction.customId.startsWith('confirm_settle_')) {
+                                await processChannelSettlement(interaction);
+                            } else if (interaction.customId.startsWith('add_funds_')) {
+                                await handleAddFunds(interaction);
+                            } else if (interaction.customId.startsWith('send_another_payment_')) {
+                                const channelIndex = interaction.customId.replace('send_another_payment_', '');
+                                // Create a modal for sending another payment to this specific channel
+                                const modal = new ModalBuilder()
+                                    .setCustomId(`micropayment_modal_${channelIndex}`)
+                                    .setTitle('Send Another Micropayment');
+                                    
+                                const amountInput = new TextInputBuilder()
+                                    .setCustomId('micropayment_amount')
+                                    .setLabel('Amount (XRP)')
+                                    .setStyle(TextInputStyle.Short)
+                                    .setPlaceholder('Enter amount (e.g. 0.001)')
+                                    .setRequired(true);
+                                    
+                                const memoInput = new TextInputBuilder()
+                                    .setCustomId('micropayment_memo')
+                                    .setLabel('Memo/Description')
+                                    .setStyle(TextInputStyle.Short)
+                                    .setPlaceholder('What is this payment for?')
+                                    .setRequired(false);
+                                    
+                                const rows = [
+                                    new ActionRowBuilder().addComponents(amountInput),
+                                    new ActionRowBuilder().addComponents(memoInput)
+                                ];
+                                
+                                modal.addComponents(rows);
+                                await interaction.showModal(modal);
+                            }
+                            
+                            if (interaction.customId.startsWith('cbdc_track_')) {
+                                const cbdcId = interaction.customId.replace('cbdc_track_', '');
+                                await interaction.reply({
+                                    content: `You are now tracking updates for ${cbdcData[cbdcId].name}. You will be notified of any significant changes.`,
+                                    ephemeral: true
+                                });
+                            }
+                            
+                            if (interaction.customId.startsWith('cbdc_swap_amount_')) {
+                                const [_, fromCbdcId, toCbdcId] = interaction.customId.split('_').slice(2);
+                                await showSwapAmountModal(interaction, fromCbdcId, toCbdcId);
+                            }
+                            
+                            if (interaction.customId.startsWith('cbdc_create_channel_')) {
+                                const cbdcId = interaction.customId.replace('cbdc_create_channel_', '');
+                                // Show channel creation modal (implementation would be similar to other modals)
+                                await interaction.reply({
+                                    content: `Channel creation for ${cbdcData[cbdcId].name} will be implemented in a future update.`,
+                                    ephemeral: true
+                                });
+                            }
+                            
+                            if (interaction.customId.startsWith('cbdc_view_channels_')) {
+                                const cbdcId = interaction.customId.replace('cbdc_view_channels_', '');
+                                // Show user's existing channels (implementation would fetch from database)
+                                await interaction.reply({
+                                    content: `Viewing existing channels for ${cbdcData[cbdcId].name} will be implemented in a future update.`,
+                                    ephemeral: true
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Error handling button interaction:', error);
+                            try {
+                                if (!interaction.replied && !interaction.deferred) {
+                                    await interaction.reply({
+                                        content: 'An error occurred. Please try again.',
+                                        ephemeral: true
+                                    });
+                                } else {
+                                    await interaction.editReply({
+                                        content: 'An error occurred. Please try again.',
+                                        ephemeral: true
+                                    });
+                                }
+                            } catch (replyError) {
+                                console.error('Error sending error reply:', replyError);
+                            }
+                        }
+                    }
+                    
+                    if (interaction.isModalSubmit()) {
+                        try {
+                            console.log(`Modal submitted: ${interaction.customId}`);
+                            
+                            switch (interaction.customId) {
+                                case 'balance_modal':
+                                    await handleCheckBalance(interaction);
+                                    break;
+                                case 'tx_modal':
+                                    await handleTransactionHistory(interaction);
+                                    break;
+                                case 'escrow_modal':
+                                    await handleEscrowStatus(interaction);
+                                    break;
+                                case 'nft_modal':
+                                    await handleNFTHoldings(interaction);
+                                    break;
+                                case 'decode_modal':
+                                    await handleTransactionDecode(interaction);
+                                    break;
+                                case 'connect_wallet_modal':
+                                    await handleConnectWallet(interaction);
+                                    break;
+                                case 'phishing_check_modal':
+                                    await processPhishingCheck(interaction);
+                                    break;
+                                case 'verify_tx_modal':
+                                    await processTransactionVerification(interaction);
+                                    break;
+                                case 'security_audit_modal':
+                                    await processSecurityAudit(interaction);
+                                    break;
+                                case 'activity_monitor_modal':
+                                    await processActivityMonitor(interaction);
+                                    break;
+                                case 'trustline_safety_modal':
+                                    await processTrustlineSafety(interaction);
+                                    break;
+                                case 'create_channel_modal':
+                                    await processCreateChannel(interaction);
+                                    break;
+                                case 'nft_lookup_modal':
+                                    await processNFTLookup(interaction);
+                                    break;
+                                case 'nft_rarity_modal':
+                                    await processNFTRarity(interaction);
+                                    break;
+                                case 'nft_collection_modal':
+                                    await processNFTCollection(interaction);
+                                    break;
+                                case 'nft_portfolio_modal':
+                                    await processNFTPortfolio(interaction);
+                                    break;
+                                case 'nft_compare_modal':
+                                    await processNFTCompare(interaction);
+                                    break;
+                            }
+                            
+                            if (interaction.customId.startsWith('swap_amount_modal_')) {
+                                const parts = interaction.customId.split('_');
+                                const fromTokenIndex = parts[3];
+                                const toTokenIndex = parts[4];
+                                
+                                console.log(`Handling swap amount modal: from=${fromTokenIndex}, to=${toTokenIndex}`);
+                                await handleSwapAmountSubmit(interaction, fromTokenIndex, toTokenIndex);
+                            }
+                            
+                            if (interaction.customId.startsWith('micropayment_modal_')) {
+                                await processMicropayment(interaction);
+                            } else if (interaction.customId.startsWith('add_funds_modal_')) {
+                                await processAddFunds(interaction);
+                            }
+                            
+                            if (interaction.customId.startsWith('cbdc_balance_modal_')) {
+                                const cbdcId = interaction.customId.replace('cbdc_balance_modal_', '');
+                                await processCBDCBalanceCheck(interaction, cbdcId);
+                            }
+                            
+                            if (interaction.customId.startsWith('cbdc_swap_modal_')) {
+                                const [_, fromCbdcId, toCbdcId] = interaction.customId.split('_').slice(2);
+                                await processSwapAmount(interaction, fromCbdcId, toCbdcId);
+                            }
+                            
+                        } catch (error) {
+                            console.error('Error handling modal submit:', error);
+                            try {
+                                if (!interaction.replied && !interaction.deferred) {
+                                    await interaction.reply({
+                                        content: 'An error occurred. Please try again.',
+                                        ephemeral: true
+                                    });
+                                } else {
+                                    await interaction.editReply({
+                                        content: 'An error occurred. Please try again.',
+                                        ephemeral: true
+                                    });
+                                }
+                            } catch (replyError) {
+                                console.error('Error sending error reply:', replyError);
+                            }
+                        }
+                    }
+                    
+                    // Handle select menu interactions
+                    if (interaction.isStringSelectMenu()) {
+                        console.log(`Select menu used: ${interaction.customId}`);
+                        
+                        switch (interaction.customId) {
+                            case 'order_book_pair_select': {
+                                const selectedPair = JSON.parse(interaction.values[0]);
+                                await handleOrderBookPairSelect(interaction, selectedPair);
+                                break;
+                            }
+                            
+                            case 'micropayment_channel_select': {
+                                await handleChannelSelection(interaction);
+                                break;
+                            }
+                            
+                            case 'settle_channel_select': {
+                                await handleSettleSelection(interaction);
+                                break;
+                            }
+                        }
+                        
+                        // For custom ID patterns that don't fit in the switch
+                        if (interaction.customId.startsWith('quick_trade_pair_select_')) {
+                            const tradeType = interaction.customId.replace('quick_trade_pair_select_', '');
+                            const selectedPair = JSON.parse(interaction.values[0]);
+                            await handleQuickTradePair(interaction, tradeType, selectedPair);
+                        }
+                    }
+                });
+                
+                // Handle token selection interface
+                async function showTokenSelectionInterface(interaction, selectionType) {
+                    try {
+                        await interaction.deferUpdate();
+                        
+                        // Import the function from swapManager.js
+                        const { showTokenSelectionInterface } = await import('./features/swapManager.js');
+                        
+                        // Show the token selection interface
+                        await showTokenSelectionInterface(interaction, selectionType);
+                    } catch (error) {
+                        console.error('Error handling token selection:', error);
+                        await interaction.editReply({
+                            content: 'Error selecting tokens. Please try again.',
+                            ephemeral: true
+                        });
+                    }
+                }
+                
+                // This should only happen ONCE when the bot starts
+                client.once('ready', () => {
+                    console.log('Bot is ready!');
+                    setupWalletSessionTimeout();
+                });
+                
+                // Try with environment variable first
+                client.login(process.env.DISCORD_TOKEN)
+                    .catch(error => {
+                        console.error("Failed to login with environment variable:", error.message);
+                        
+                        // Uncomment and replace YOUR_TOKEN_HERE with your actual token
+                        // return client.login("YOUR_TOKEN_HERE");
+                    });
+                
