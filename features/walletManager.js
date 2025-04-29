@@ -855,3 +855,35 @@ function getActiveSessions() {
     
     return global.walletSessions;
 }
+
+// After receiving a payload from Xaman/XUMM
+async function processXamanSignIn(payload, userId) {
+    try {
+        // Make sure you're extracting the account correctly
+        // INCORRECT:
+        // const account = 'Account from TX: ' + payload.txid;
+        
+        // CORRECT:
+        const account = payload.response.account;
+        
+        // Then proceed with your wallet connection logic
+        // ...
+        
+        // When fetching additional wallet data, use the correct account address
+        const client = new xrpl.Client('wss://xrplcluster.com');
+        await client.connect();
+        
+        const accountInfo = await client.request({
+            command: 'account_info',
+            account: account,  // Use the correct account address
+            ledger_index: 'validated'
+        });
+        
+        // Process account info
+        // ...
+        
+        await client.disconnect();
+    } catch (error) {
+        console.error('Error processing sign-in:', error);
+    }
+}

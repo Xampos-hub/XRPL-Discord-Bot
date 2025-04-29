@@ -141,3 +141,134 @@ export async function startAMMAnalytics(client, channelId) {
         }
     }, 1800000); // 30 minutes
 }
+
+constructor(client, channelId) {
+    this.discordClient = client;
+    this.channelId = channelId;
+    this.xrplServers = [
+        'wss://xrplcluster.com',
+        'wss://s1.ripple.com',
+        'wss://s2.ripple.com',
+        'wss://rippled.xrpl-labs.com'
+    ];
+    this.currentServerIndex = 0;
+    this.xrplServer = this.xrplServers[this.currentServerIndex];
+    this.client = new xrpl.Client(this.xrplServer);
+    
+    // Rest of your constructor code
+}
+
+// Add a method to rotate through servers
+rotateServer() {
+    this.currentServerIndex = (this.currentServerIndex + 1) % this.xrplServers.length;
+    this.xrplServer = this.xrplServers[this.currentServerIndex];
+    console.log(`Rotating to next XRPL server: ${this.xrplServer}`);
+    this.client = new xrpl.Client(this.xrplServer);
+    
+    // Re-attach event listeners to the new client
+    this.setupEventListeners();
+}
+
+setupEventListeners() {
+    this.client.on('error', (errorCode, errorMessage) => {
+        console.log(`AMM client error: ${errorCode}: ${errorMessage}`);
+        this.reconnectClient();
+    });
+    
+    this.client.on('disconnected', (code) => {
+        console.log(`AMM client disconnected with code: ${code}`);
+        this.reconnectClient();
+    });
+    
+    this.client.on('reconnect', () => {
+        console.log('AMM client reconnecting...');
+    });
+}
+
+async reconnectClient() {
+    try {
+        if (this.client.isConnected()) {
+            await this.client.disconnect();
+        }
+        
+        // Try current server first
+        try {
+            console.log(`Attempting to reconnect AMM client to ${this.xrplServer} in 5 seconds...`);
+            setTimeout(async () => {
+                try {
+                    await this.client.connect();
+                    console.log('AMM client reconnected successfully');
+                } catch (error) {
+                    console.error('AMM client reconnection failed, rotating servers');
+                    this.rotateServer();
+                    setTimeout(() => this.reconnectClient(), 5000);
+                }
+            }, 5000);
+        } catch (error) {
+            console.error('Error during AMM client reconnection process:', error);
+            this.rotateServer();
+            setTimeout(() => this.reconnectClient(), 5000);
+        }
+    } catch (error) {
+        console.error('Fatal error during AMM client reconnection:', error);
+    }
+}
+
+async fetchAMMData() {
+    try {
+        // Check if client is connected before making requests
+        if (!this.client.isConnected()) {
+            console.log('AMM client not connected, attempting to connect...');
+            await this.client.connect();
+        }
+        
+        // Your existing AMM data fetching code
+        const response = await this.client.request({
+            command: 'amm_info',
+            asset: { currency: "XRP" },
+            asset2: { 
+                currency: "USD",
+                issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+            }
+        });
+        
+        return response.result;
+    } catch (error) {
+        console.error('AMM update error:', error);
+        
+        // Handle specific error types
+        if (error.message && error.message.includes('WebSocket is not open')) {
+            this.reconnectClient();
+            return null; // Return null to indicate fetch failure
+        }
+        
+        // For other errors, just return null
+        return null;
+    }
+}
+
+async sendUpdate() {
+    try {
+        const ammData = await this.fetchAMMData();
+        
+        // If data fetch failed, send a simplified message and exit
+        if (!ammData) {
+            const errorEmbed = new EmbedBuilder()
+                .setTitle('🔄 AMM Analytics - Connection Issue')
+                .setColor('#ff9900')
+                .setDescription('Unable to fetch AMM data due to connection issues. Will retry shortly.')
+                .setTimestamp();
+                
+            const channel = this.client.channels.cache.get(this.channelId);
+            if (channel) {
+                await channel.send({ embeds: [errorEmbed] });
+            }
+            return;
+        }
+        
+        // Your existing code to process and send AMM data
+        // ...
+    } catch (error) {
+        console.error('Error sending AMM update:', error);
+    }
+}

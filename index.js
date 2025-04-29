@@ -16,6 +16,7 @@ import {
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import { handleCheckBalance } from './features/checkBalance.js';
 import { handleTransactionHistory } from './features/transactionHistory.js';
 import { handleEscrowStatus } from './features/escrowStatus.js';
@@ -73,22 +74,6 @@ import {
     processTrustlineSafety
 } from './features/securityTools.js';
 import {
-    handleViewChannels,
-    handleCreateChannel,
-    processCreateChannel,
-    handleSendMicropayment,
-    handleChannelSelection,
-    processMicropayment,
-    handleChannelAnalytics,
-    handleSettleChannel,
-    handleSettleSelection,
-    processChannelSettlement,
-    handleChannelDetails,
-    handleAddFunds,
-    processAddFunds,
-    handleCancelSettlement
-} from './features/paymentChannelsManager.js';
-import {
     handleCBDCInfo,
     handleCBDCBalance,
     handleCBDCSwap,
@@ -105,9 +90,13 @@ import {
     showCBDCChannelSetup,
     processCBDCBalanceCheck
 } from './features/cbdcManager.js';
+import * as xrpl from 'xrpl';
+import { ValidatorHealthMonitor } from './src/services/validatorHealthMonitor.js';
+import { DeveloperEcosystemPulse } from './src/services/developerEcosystemPulse.js';
+import serviceManager from './src/services/serviceManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
 const client = new Client({
     intents: [
@@ -117,199 +106,333 @@ const client = new Client({
     ]
 });
 
+// Add global error handling for XRPL client connections
+const setupXrplErrorHandling = (client) => {
+    client.on('error', (error) => {
+        console.log('XRPL client error:', error);
+    });
+    
+    client.on('disconnected', (code) => {
+        console.log('XRPL connection lost. Code:', code);
+    });
+    
+    client.on('reconnect', (error) => {
+        console.log('XRPL client reconnecting:', error);
+    });
+    
+    // Add specific handler for noPermission error
+    if (client.connection) {
+        client.connection.on('noPermission', (error) => {
+            console.log('XRPL client permission error:', error);
+        });
+    }
+    
+    return client;
+};
+
 client.commands = new Collection();
 
-const commandFiles = fs.readdirSync('./interactions/commands').filter(file => file.endsWith('.js'));
+const commandsPath = path.join(__dirname, 'interactions', 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
-    const command = await import(`./interactions/commands/${file}`);
-    client.commands.set(command.default.data.name, command.default);
+    const filePath = path.join(commandsPath, file);
+    // Convert the file path to a proper URL format
+    const fileUrl = new URL(`file://${filePath}`).href;
+    
+    try {
+        const command = await import(fileUrl);
+        
+        if (command.default && command.default.data) {
+            // Handle default export
+            client.commands.set(command.default.data.name, command.default);
+            console.log(`Loaded command: ${command.default.data.name}`);
+        } else if (command.data) {
+            // Handle direct export
+            client.commands.set(command.data.name, command);
+            console.log(`Loaded command: ${command.data.name}`);
+        } else {
+            console.log(`[WARNING] Command at ${filePath} is missing a required "data" property.`);
+        }
+    } catch (error) {
+        console.error(`Error loading command from ${filePath}:`, error);
+    }
 }
 
 // Direct balance check without asking for address
-async function handleDirectBalanceCheck(interaction, address) {
+async function handleDirectBalanceCheck(interaction, walletAddress) {
     try {
         await interaction.deferReply({ ephemeral: true });
         
-        const client = new xrpl.Client("wss://s1.ripple.com");
+        const client = setupXrplErrorHandling(new xrpl.Client('wss://xrplcluster.com'));
         await client.connect();
         
+        // Get account info for XRP balance
         const accountInfo = await client.request({
-            command: "account_info",
-            account: address,
-            ledger_index: "validated"
+            command: 'account_info',
+            account: walletAddress,
+            ledger_index: 'validated'
         });
+        
+        // Calculate XRP balance
+        const xrpBalance = xrpl.dropsToXrp(accountInfo.result.account_data.Balance);
+        
+        // Get account lines (trust lines) for other tokens
         const accountLines = await client.request({
-            command: "account_lines",
-            account: address
+            command: 'account_lines',
+            account: walletAddress
         });
-        const balanceEmbed = new EmbedBuilder()
+        
+        // Create embed with balance information
+        const embed = new EmbedBuilder()
+            .setTitle(`💼 Wallet Balance`)
+            .setDescription(`**Address:** \`${walletAddress}\``)
             .setColor('#00ff00')
-            .setTitle('💰 Wallet Balance')
-            .setDescription(`Balance information for your connected wallet`)
             .addFields(
-                { name: 'Wallet Address', value: `\`${address}\`` },
-                { name: 'XRP Balance', value: `${xrpl.dropsToXrp(accountInfo.result.account_data.Balance)} XRP` }
+                { 
+                    name: '💰 XRP Balance', 
+                    value: `**${parseFloat(xrpBalance).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 6
+                    })} XRP**`, 
+                    inline: false 
+                }
             );
-
-        if (accountLines.result.lines.length > 0) {
-            accountLines.result.lines.forEach(line => {
-                let formattedBalance = line.balance;
-                let tokenName = line.currency;
-                
-                if (tokenName.length === 40) {
-                    try {
-                        tokenName = Buffer.from(tokenName, 'hex').toString('utf-8').replace(/\0/g, '');
-                    } catch (e) {
-                        tokenName = line.currency;
+        
+        // Function to convert hex to readable text if applicable
+        function formatCurrency(currencyCode) {
+            // If it's already a standard currency code (3-character)
+            if (/^[A-Za-z0-9]{3}$/.test(currencyCode)) {
+                return currencyCode;
+            }
+            
+            // Check if it's a hex representation of ASCII
+            if (/^[0-9A-F]{40}$/i.test(currencyCode)) {
+                try {
+                    // Convert hex to ASCII and remove null bytes
+                    let ascii = '';
+                    for (let i = 0; i < currencyCode.length; i += 2) {
+                        const hexPair = currencyCode.substr(i, 2);
+                        const charCode = parseInt(hexPair, 16);
+                        if (charCode !== 0) { // Skip null bytes
+                            ascii += String.fromCharCode(charCode);
+                        }
                     }
+                    // If we got a readable string, use it
+                    if (/^[A-Za-z0-9.+_-]+$/.test(ascii)) {
+                        return ascii.trim();
+                    }
+                } catch (e) {
+                    // If conversion fails, fall back to original
                 }
-                
-                const num = parseFloat(formattedBalance);
-                if (Math.abs(num) < 1 && num !== 0) {
-                    formattedBalance = num.toFixed(8);
-                } else {
-                    formattedBalance = num.toFixed(2);
-                }
-                
-                formattedBalance = formattedBalance.replace(/\.?0+$/, '');
-                
-                balanceEmbed.addFields({
-                    name: `${tokenName}`,
-                    value: `${formattedBalance} ${tokenName}\nIssuer: ${line.account.substring(0, 12)}...`
+            }
+            
+            // Known token mappings for common hex codes
+            const knownTokens = {
+                '5045504500000000000000000000000000000000': 'PEPE',
+                '544F544F00000000000000000000000000000000': 'TOTO',
+                '5349474D41000000000000000000000000000000': 'SIGMA',
+                '62756C6C00000000000000000000000000000000': 'BULL',
+                '4861626962690000000000000000000000000000': 'HABIBI',
+                '03A3C43A269186A89299C637C1DC06C9F1F586CF': 'SOLO'
+                // Add more mappings as needed
+            };
+            
+            return knownTokens[currencyCode] || (currencyCode.length > 10 ? currencyCode.substring(0, 6) + '...' : currencyCode);
+        }
+        
+        // Known issuers mapping
+        const knownIssuers = {
+            'rUWUQhB2pcgCbjJxaBv9GrS1hr9pCUGXxX': 'DRX Official',
+            'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz': 'Sologenic',
+            // Add more mappings as needed
+        };
+        
+        // Add token balances if they exist
+        if (accountLines.result.lines && accountLines.result.lines.length > 0) {
+            // Filter for non-zero balances
+            const nonZeroLines = accountLines.result.lines.filter(line => parseFloat(line.balance) !== 0);
+            
+            // Prepare verified and other tokens
+            let verifiedTokensText = '';
+            let otherTokensText = '';
+            
+            // Sort by balance value (highest first)
+            nonZeroLines.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+            
+            nonZeroLines.forEach(line => {
+                const formattedCurrency = formatCurrency(line.currency);
+                const formattedBalance = parseFloat(line.balance).toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 6
                 });
+                
+                // Get issuer info
+                let issuerInfo = knownIssuers[line.account] || `${line.account.substring(0, 8)}...`;
+                
+                // Format the line
+                const tokenLine = `**${formattedBalance}** ${formattedCurrency} (${issuerInfo})`;
+                
+                // Add to appropriate category
+                if (knownIssuers[line.account]) {
+                    verifiedTokensText += `• ${tokenLine}\n`;
+                } else {
+                    otherTokensText += `• ${tokenLine}\n`;
+                }
+            });
+            
+            // Add verified tokens field if any
+            if (verifiedTokensText) {
+                embed.addFields({ 
+                    name: '✅ Verified Tokens', 
+                    value: verifiedTokensText, 
+                    inline: false 
+                });
+            }
+            
+            // Add other tokens field if any
+            if (otherTokensText) {
+                embed.addFields({ 
+                    name: '🪙 Other Tokens', 
+                    value: otherTokensText, 
+                    inline: false 
+                });
+            }
+        } else {
+            embed.addFields({
+                name: '🪙 Token Balances',
+                value: 'No tokens found in this wallet',
+                inline: false
             });
         }
-        await interaction.editReply({ embeds: [balanceEmbed] });
+        
+        // Get NFTs if any
+        try {
+            const nftResponse = await client.request({
+                command: 'account_nfts',
+                account: walletAddress
+            });
+            
+            if (nftResponse.result.account_nfts && nftResponse.result.account_nfts.length > 0) {
+                const nftCount = nftResponse.result.account_nfts.length;
+                embed.addFields({
+                    name: '🖼️ NFTs',
+                    value: `This wallet holds **${nftCount}** NFT${nftCount !== 1 ? 's' : ''}`,
+                    inline: false
+                });
+            }
+        } catch (nftError) {
+            console.log('Error fetching NFTs (may not be supported):', nftError.message);
+        }
+        
+        // Add a footer with timestamp
+        embed.setFooter({ text: 'Balance as of' })
+             .setTimestamp();
+        
+        // Add a thumbnail
+        embed.setThumbnail('https://cryptologos.cc/logos/xrp-xrp-logo.png');
+        
+        await interaction.editReply({ embeds: [embed] });
         await client.disconnect();
     } catch (error) {
         console.error('Error in direct balance check:', error);
-        await interaction.editReply({ 
-            content: 'Error fetching balance: ' + error.message, 
-            ephemeral: true 
-        });
+        if (interaction.deferred) {
+            await interaction.editReply({ content: `Error checking balance: ${error.message}` });
+        } else {
+            await interaction.reply({ content: `Error checking balance: ${error.message}`, ephemeral: true });
+        }
     }
 }
 
 // Direct transaction history without asking for address
-async function handleDirectTransactionHistory(interaction, address) {
+async function handleDirectTransactionHistory(interaction, walletAddress) {
     try {
         await interaction.deferReply({ ephemeral: true });
         
-        const client = new xrpl.Client("wss://s1.ripple.com");
+        const client = new xrpl.Client('wss://xrplcluster.com');
         await client.connect();
         
-        const response = await client.request({
-            command: "account_tx",
-            account: address,
-            limit: 5,
-            binary: false
+        const accountTx = await client.request({
+            command: 'account_tx',
+            account: walletAddress,
+            limit: 10
         });
-        const txEmbed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('💫 Transaction History')
-            .setDescription(`Recent transactions for your connected wallet`);
-
-        if (response.result.transactions && response.result.transactions.length > 0) {
-            response.result.transactions.forEach((tx) => {
-                let details = '';
+        
+        const transactions = accountTx.result.transactions.map(tx => {
+            const txType = tx.tx.TransactionType;
+            const date = new Date(xrpl.rippleTimeToUnixTime(tx.tx.date) * 1000).toLocaleString();
+            let description = `Type: ${txType}`;
+            
+            if (txType === 'Payment') {
+                const amount = tx.tx.Amount ? 
+                    (typeof tx.tx.Amount === 'string' ? 
+                        `${xrpl.dropsToXrp(tx.tx.Amount)} XRP` : 
+                        `${tx.tx.Amount.value} ${tx.tx.Amount.currency}`) : 
+                    'Unknown';
                 
-                // Check if transaction exists and has type
-                if (tx && tx.tx) {
-                    switch(tx.tx.TransactionType) {
-                        case 'Payment':
-                            details += '💸 Payment\n';
-                            break;
-                        case 'OfferCreate':
-                            details += '📈 Offer Created\n';
-                            break;
-                        case 'OfferCancel':
-                            details += '📉 Offer Cancelled\n';
-                            break;
-                        default:
-                            details += '🔄 Other Transaction\n';
-                    }
-                    
-                    if (tx.tx.Amount) {
-                        const amount = typeof tx.tx.Amount === 'string' ? 
-                            Number(tx.tx.Amount) / 1000000 : 
-                            tx.tx.Amount.value;
-                        details += `💰 Amount: ${amount} XRP\n`;
-                    }
-                    
-                    if (tx.tx.Destination) {
-                        details += `📤 To: ${tx.tx.Destination.substring(0, 12)}...`;
-                    }
-                    txEmbed.addFields({
-                        name: `Transaction`,
-                        value: `\`\`\`${details}\`\`\``
-                    });
-                }
-            });
-        } else {
-            txEmbed.addFields({
-                name: 'No Transactions',
-                value: 'No recent transactions found'
-            });
-        }
-        await interaction.editReply({ embeds: [txEmbed] });
+                description += ` | Amount: ${amount}`;
+                description += ` | To: ${tx.tx.Destination.substring(0, 8)}...`;
+            }
+            
+            return `• ${date}: ${description}`;
+        });
+        
+        const embed = new EmbedBuilder()
+            .setTitle(`Transaction History: ${walletAddress.substring(0, 8)}...`)
+            .setColor('#0099ff')
+            .setDescription(transactions.length > 0 ? 
+                transactions.join('\n') : 
+                'No recent transactions found');
+        
+        await interaction.editReply({ embeds: [embed] });
         await client.disconnect();
     } catch (error) {
         console.error('Error in direct transaction history:', error);
-        await interaction.editReply({ 
-            content: 'Error fetching transactions: ' + error.message, 
-            ephemeral: true 
-        });
+        if (interaction.deferred) {
+            await interaction.editReply({ content: `Error fetching transaction history: ${error.message}` });
+        } else {
+            await interaction.reply({ content: `Error fetching transaction history: ${error.message}`, ephemeral: true });
+        }
     }
 }
 
 // Direct trust lines without asking for address
-async function handleDirectTrustLines(interaction, address) {
+async function handleDirectTrustLines(interaction, walletAddress) {
     try {
         await interaction.deferReply({ ephemeral: true });
         
-        const client = new xrpl.Client("wss://s1.ripple.com");
+        const client = new xrpl.Client('wss://xrplcluster.com');
         await client.connect();
         
         const accountLines = await client.request({
-            command: "account_lines",
-            account: address
+            command: 'account_lines',
+            account: walletAddress
         });
-        const trustEmbed = new EmbedBuilder()
-            .setColor('#00ff00')
-            .setTitle('🤝 Trust Lines')
-            .setDescription(`Trust lines for your connected wallet`);
-
-        if (accountLines.result.lines.length > 0) {
-            accountLines.result.lines.forEach((line, index) => {
-                let tokenName = line.currency;
-                
-                if (tokenName.length === 40) {
-                    try {
-                        tokenName = Buffer.from(tokenName, 'hex').toString('utf-8').replace(/\0/g, '');
-                    } catch (e) {
-                        tokenName = line.currency;
-                    }
-                }
-                
-                trustEmbed.addFields({
-                    name: `${tokenName}`,
-                    value: `Issuer: ${line.account.substring(0, 12)}...\nLimit: ${line.limit}\nBalance: ${line.balance}`
-                });
-            });
+        
+        const trustlines = accountLines.result.lines || [];
+        
+        const embed = new EmbedBuilder()
+            .setTitle(`Trust Lines: ${walletAddress.substring(0, 8)}...`)
+            .setColor('#0099ff');
+        
+        if (trustlines.length > 0) {
+            const formattedLines = trustlines.map(line => 
+                `• ${line.currency}: ${line.balance} (Issuer: ${line.account.substring(0, 8)}...)`
+            );
+            
+            embed.setDescription(formattedLines.join('\n'));
         } else {
-            trustEmbed.addFields({
-                name: 'No Trust Lines',
-                value: 'No trust lines found for this wallet'
-            });
+            embed.setDescription('No trust lines found for this account.');
         }
-        await interaction.editReply({ embeds: [trustEmbed] });
+        
+        await interaction.editReply({ embeds: [embed] });
         await client.disconnect();
     } catch (error) {
         console.error('Error in direct trust lines:', error);
-        await interaction.editReply({ 
-            content: 'Error fetching trust lines: ' + error.message, 
-            ephemeral: true 
-        });
+        if (interaction.deferred) {
+            await interaction.editReply({ content: `Error fetching trust lines: ${error.message}` });
+        } else {
+            await interaction.reply({ content: `Error fetching trust lines: ${error.message}`, ephemeral: true });
+        }
     }
 }
 
@@ -576,30 +699,6 @@ client.on('interactionCreate', async interaction => {
                                 case 'security_resources':
                                     await handleSecurityResources(interaction)
                                     break
-                
-                                case 'view_channels':
-                                    await handleViewChannels(interaction)
-                                    break
-
-                                case 'create_channel':
-                                    await handleCreateChannel(interaction)
-                                    break
-
-                                case 'send_micropayment':
-                                    await handleSendMicropayment(interaction)
-                                    break
-
-                                case 'channel_analytics':
-                                    await handleChannelAnalytics(interaction)
-                                    break
-
-                                case 'settle_channel':
-                                    await handleSettleChannel(interaction)
-                                    break
-
-                                case 'cancel_settle':
-                                    await handleCancelSettlement(interaction)
-                                    break
 
                                 case 'cbdc_info':
                                     await handleCBDCInfo(interaction)
@@ -858,78 +957,6 @@ client.on('interactionCreate', async interaction => {
                                 await handleDirectTrustLines(interaction, address);
                             }
                             
-                            // Payment Channels buttons
-                            if (interaction.customId.startsWith('channel_details_')) {
-                                await handleChannelDetails(interaction);
-                            } else if (interaction.customId.startsWith('send_payment_')) {
-                                const channelIndex = interaction.customId.replace('send_payment_', '');
-                                // If it's a new channel, handle differently
-                                if (channelIndex.startsWith('new_')) {
-                                    const newIndex = channelIndex.replace('new_', '');
-                                    await handleSendMicropayment(interaction);
-                                } else {
-                                    // Create a modal for sending payment to this specific channel
-                                    const modal = new ModalBuilder()
-                                        .setCustomId(`micropayment_modal_${channelIndex}`)
-                                        .setTitle('Send Micropayment');
-                                        
-                                    const amountInput = new TextInputBuilder()
-                                        .setCustomId('micropayment_amount')
-                                        .setLabel('Amount (XRP)')
-                                        .setStyle(TextInputStyle.Short)
-                                        .setPlaceholder('Enter amount (e.g. 0.001)')
-                                        .setRequired(true);
-                                        
-                                    const memoInput = new TextInputBuilder()
-                                        .setCustomId('micropayment_memo')
-                                        .setLabel('Memo/Description')
-                                        .setStyle(TextInputStyle.Short)
-                                        .setPlaceholder('What is this payment for?')
-                                        .setRequired(false);
-                                        
-                                    const rows = [
-                                        new ActionRowBuilder().addComponents(amountInput),
-                                        new ActionRowBuilder().addComponents(memoInput)
-                                    ];
-                                    
-                                    modal.addComponents(rows);
-                                    await interaction.showModal(modal);
-                                }
-                            } else if (interaction.customId.startsWith('close_channel_') ||
-                                        interaction.customId.startsWith('confirm_settle_')) {
-                                await processChannelSettlement(interaction);
-                            } else if (interaction.customId.startsWith('add_funds_')) {
-                                await handleAddFunds(interaction);
-                            } else if (interaction.customId.startsWith('send_another_payment_')) {
-                                const channelIndex = interaction.customId.replace('send_another_payment_', '');
-                                // Create a modal for sending another payment to this specific channel
-                                const modal = new ModalBuilder()
-                                    .setCustomId(`micropayment_modal_${channelIndex}`)
-                                    .setTitle('Send Another Micropayment');
-                                    
-                                const amountInput = new TextInputBuilder()
-                                    .setCustomId('micropayment_amount')
-                                    .setLabel('Amount (XRP)')
-                                    .setStyle(TextInputStyle.Short)
-                                    .setPlaceholder('Enter amount (e.g. 0.001)')
-                                    .setRequired(true);
-                                    
-                                const memoInput = new TextInputBuilder()
-                                    .setCustomId('micropayment_memo')
-                                    .setLabel('Memo/Description')
-                                    .setStyle(TextInputStyle.Short)
-                                    .setPlaceholder('What is this payment for?')
-                                    .setRequired(false);
-                                    
-                                const rows = [
-                                    new ActionRowBuilder().addComponents(amountInput),
-                                    new ActionRowBuilder().addComponents(memoInput)
-                                ];
-                                
-                                modal.addComponents(rows);
-                                await interaction.showModal(modal);
-                            }
-                            
                             if (interaction.customId.startsWith('cbdc_track_')) {
                                 const cbdcId = interaction.customId.replace('cbdc_track_', '');
                                 await interaction.reply({
@@ -1018,9 +1045,6 @@ client.on('interactionCreate', async interaction => {
                                 case 'trustline_safety_modal':
                                     await processTrustlineSafety(interaction);
                                     break;
-                                case 'create_channel_modal':
-                                    await processCreateChannel(interaction);
-                                    break;
                                 case 'nft_lookup_modal':
                                     await processNFTLookup(interaction);
                                     break;
@@ -1047,11 +1071,6 @@ client.on('interactionCreate', async interaction => {
                                 await handleSwapAmountSubmit(interaction, fromTokenIndex, toTokenIndex);
                             }
                             
-                            if (interaction.customId.startsWith('micropayment_modal_')) {
-                                await processMicropayment(interaction);
-                            } else if (interaction.customId.startsWith('add_funds_modal_')) {
-                                await processAddFunds(interaction);
-                            }
                             
                             if (interaction.customId.startsWith('cbdc_balance_modal_')) {
                                 const cbdcId = interaction.customId.replace('cbdc_balance_modal_', '');
@@ -1094,15 +1113,6 @@ client.on('interactionCreate', async interaction => {
                                 break;
                             }
                             
-                            case 'micropayment_channel_select': {
-                                await handleChannelSelection(interaction);
-                                break;
-                            }
-                            
-                            case 'settle_channel_select': {
-                                await handleSettleSelection(interaction);
-                                break;
-                            }
                         }
                         
                         // For custom ID patterns that don't fit in the switch
@@ -1134,9 +1144,15 @@ client.on('interactionCreate', async interaction => {
                 }
                 
                 // This should only happen ONCE when the bot starts
-                client.once('ready', () => {
+                client.once('ready', async () => {
                     console.log('Bot is ready!');
-                    setupWalletSessionTimeout();
+                    
+                    // Start the service checking interval
+                    serviceManager.startChecking();
+                    
+                    // Initialize service manager
+                    console.log('Service Manager status:');
+                    serviceManager.checkServices();
                 });
                 
                 // Try with environment variable first

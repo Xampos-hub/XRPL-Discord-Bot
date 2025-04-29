@@ -1,0 +1,979 @@
+{
+  "lastUpdate": "2025-04-26T18:36:27.210Z",
+  "githubData": {
+    "repositories": [
+      {
+        "name": "xrpl.js",
+        "fullName": "XRPLF/xrpl.js",
+        "description": "A JavaScript/TypeScript API for interacting with the XRP Ledger in Node.js and the browser",
+        "url": "https://github.com/XRPLF/xrpl.js",
+        "stars": 1259,
+        "forks": 541,
+        "openIssues": 110,
+        "commits": [
+          {
+            "sha": "33c59049e83f98a7bc7098bbf84fe917a8b9deaf",
+            "message": "bump to publish non compromised version (#2971)",
+            "author": "Caleb Kniffen",
+            "date": "2025-04-22T12:36:19Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/33c59049e83f98a7bc7098bbf84fe917a8b9deaf"
+          },
+          {
+            "sha": "9211ff6e48fd919c2a90716e856c1a5fe305cfba",
+            "message": "fix: add `MPTCurrency` type (#2964)",
+            "author": "Omar Khan",
+            "date": "2025-04-21T15:19:10Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/9211ff6e48fd919c2a90716e856c1a5fe305cfba"
+          },
+          {
+            "sha": "b4be409f88765aa34ef2aedc50431ac43486d34c",
+            "message": "Adjustments for fee voting (#2812)",
+            "author": "pdp2121",
+            "date": "2025-04-17T17:02:20Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/b4be409f88765aa34ef2aedc50431ac43486d34c"
+          },
+          {
+            "sha": "8bcd38624fed0df04b69db37cd77c421218bf9c7",
+            "message": "fix(rbc): throw error instead of throwing away unknown fields (#2927)",
+            "author": "Mayukha Vadari",
+            "date": "2025-04-17T00:23:28Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/8bcd38624fed0df04b69db37cd77c421218bf9c7"
+          },
+          {
+            "sha": "b58acbbf192de657b57a2cff0c5d0b8f8e665e3a",
+            "message": "chore(docs): update `definitions.json` generation docs (#2947)",
+            "author": "Mayukha Vadari",
+            "date": "2025-04-15T17:35:16Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/b58acbbf192de657b57a2cff0c5d0b8f8e665e3a"
+          },
+          {
+            "sha": "effe7571f38827a7a44145e7163e1298ad2a262c",
+            "message": "Support NFTokenMintOffer (#2875)",
+            "author": "tequ",
+            "date": "2025-04-02T20:56:10Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/effe7571f38827a7a44145e7163e1298ad2a262c"
+          },
+          {
+            "sha": "066e670c4b659b5f15216cece88e367f60ef2f56",
+            "message": "fix: add `hash` field to `TransactionStream` (#2939)",
+            "author": "Mayukha Vadari",
+            "date": "2025-03-28T15:14:17Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/066e670c4b659b5f15216cece88e367f60ef2f56"
+          },
+          {
+            "sha": "7fe27f3d9c8cdb92a7f9ad97daa9cf7bb0344637",
+            "message": "fix #2911: Update OracleSet transaction model, unit, integ tests (#2913)",
+            "author": "Chenna Keshava B S",
+            "date": "2025-03-19T20:49:10Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/7fe27f3d9c8cdb92a7f9ad97daa9cf7bb0344637"
+          },
+          {
+            "sha": "ea4f606fc6979f3e56d06f73fac96948f1170c50",
+            "message": "fix: add MPTAmount support in Issue model (#2919)",
+            "author": "achowdhry-ripple",
+            "date": "2025-03-19T19:19:06Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/ea4f606fc6979f3e56d06f73fac96948f1170c50"
+          },
+          {
+            "sha": "39affb697384dc27421480411516a52475ccc5e2",
+            "message": "fix: update packages to resolve potential security issues (#2932)",
+            "author": "Omar Khan",
+            "date": "2025-03-18T21:43:05Z",
+            "url": "https://github.com/XRPLF/xrpl.js/commit/39affb697384dc27421480411516a52475ccc5e2"
+          }
+        ],
+        "pullRequests": [
+          {
+            "number": 2971,
+            "title": "bump to publish non compromised version",
+            "state": "closed",
+            "author": "ckniffen",
+            "createdAt": "2025-04-22T12:26:56Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2971"
+          },
+          {
+            "number": 2969,
+            "title": "build(deps-dev): bump @typescript-eslint/eslint-plugin from 5.62.0 to 8.30.1",
+            "state": "open",
+            "author": "dependabot[bot]",
+            "createdAt": "2025-04-21T16:08:04Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2969"
+          },
+          {
+            "number": 2968,
+            "title": "build(deps-dev): bump react from 19.0.0 to 19.1.0",
+            "state": "open",
+            "author": "dependabot[bot]",
+            "createdAt": "2025-04-21T15:59:36Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2968"
+          },
+          {
+            "number": 2967,
+            "title": "build(deps-dev): bump typedoc from 0.27.9 to 0.28.3",
+            "state": "open",
+            "author": "dependabot[bot]",
+            "createdAt": "2025-04-21T15:54:21Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2967"
+          },
+          {
+            "number": 2966,
+            "title": "refactor: improve typing of `validateRequiredField` and `validateOptionalField`",
+            "state": "open",
+            "author": "mvadari",
+            "createdAt": "2025-04-17T18:42:55Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2966"
+          },
+          {
+            "number": 2965,
+            "title": "refactor: refactor model tests to use a helper function",
+            "state": "open",
+            "author": "mvadari",
+            "createdAt": "2025-04-16T20:02:03Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2965"
+          },
+          {
+            "number": 2964,
+            "title": "fix: add `MPTCurrency` type",
+            "state": "closed",
+            "author": "khancode",
+            "createdAt": "2025-04-16T16:17:29Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2964"
+          },
+          {
+            "number": 2963,
+            "title": "build(deps-dev): bump @typescript-eslint/eslint-plugin from 5.62.0 to 8.29.1",
+            "state": "closed",
+            "author": "dependabot[bot]",
+            "createdAt": "2025-04-14T15:25:53Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2963"
+          },
+          {
+            "number": 2962,
+            "title": "build(deps): bump @noble/hashes from 1.7.1 to 1.7.2",
+            "state": "open",
+            "author": "dependabot[bot]",
+            "createdAt": "2025-04-14T15:25:38Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2962"
+          },
+          {
+            "number": 2961,
+            "title": "Fix issue #2858: Improve error messages in field validation functions",
+            "state": "open",
+            "author": "lacostenycoder",
+            "createdAt": "2025-04-09T20:09:53Z",
+            "url": "https://github.com/XRPLF/xrpl.js/pull/2961"
+          }
+        ],
+        "releases": [
+          {
+            "name": "xrpl@4.2.5",
+            "tagName": "xrpl@4.2.5",
+            "body": "Override compromised versions:\r\n\r\n- 4.2.1\r\n- 4.2.2\r\n- 4.2.3\r\n- 4.2.4\r\n- 2.14.2",
+            "createdAt": "2025-04-22T12:57:52Z",
+            "url": "https://github.com/XRPLF/xrpl.js/releases/tag/xrpl%404.2.5"
+          },
+          {
+            "name": "xrpl@4.3.0-smartescrow.0",
+            "tagName": "xrpl@4.3.0-smartescrow.0",
+            "body": "A beta that adds support for Smart Escrows.\r\n\r\n## What's Changed\r\n* Lots of package updates\r\n* Docgen issue fix by @Patel-Raj in https://github.com/XRPLF/xrpl.js/pull/2910\r\n* fix: add MPTAmount support in Issue model by @achowdhry-ripple in https://github.com/XRPLF/xrpl.js/pull/2919\r\n* fix #2911: Update OracleSet transaction model, unit, integ tests by @ckeshava in https://github.com/XRPLF/xrpl.js/pull/2913\r\n\r\n## New Contributors\r\n* @Patel-Raj made their first contribution in https://github.com/XRPLF/xrpl.js/pull/2910\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl.js/compare/ripple-binary-codec@2.3.0...xrpl@4.3.0-smartescrow.0",
+            "createdAt": "2025-03-26T19:44:50Z",
+            "url": "https://github.com/XRPLF/xrpl.js/releases/tag/xrpl%404.3.0-smartescrow.0"
+          },
+          {
+            "name": "xrpl@4.2.0-batch.0",
+            "tagName": "xrpl@4.2.0-batch.0",
+            "body": "A beta that adds support for Batch.\r\n\r\n## What's Changed\r\n* Fix: parseTransactionFlags unintentionally modifies transaction by @achowdhry-ripple in https://github.com/XRPLF/xrpl.js/pull/2825\r\n* support DynamicNFT by @yinyiqian1 in https://github.com/XRPLF/xrpl.js/pull/2726\r\n* Add more unit test for DynamicNFT by @yinyiqian1 in https://github.com/XRPLF/xrpl.js/pull/2892\r\n* feat: add support for the simulate RPC (XLS-69d) by @mvadari in https://github.com/XRPLF/xrpl.js/pull/2867\r\n* PermissionedDomain XLS-80d by @ckeshava in https://github.com/XRPLF/xrpl.js/pull/2874\r\n* Deep Freeze XLS-77d by @ckeshava in https://github.com/XRPLF/xrpl.js/pull/2873\r\n* feat: add AMMClawback support by @khancode in https://github.com/XRPLF/xrpl.js/pull/2893\r\n\r\n## New Contributors\r\n* @yinyiqian1 made their first contribution in https://github.com/XRPLF/xrpl.js/pull/2726\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl.js/compare/v4.1.0...xrpl@4.2.0-batch.0",
+            "createdAt": "2025-03-26T19:49:04Z",
+            "url": "https://github.com/XRPLF/xrpl.js/releases/tag/xrpl%404.2.0-batch.0"
+          },
+          {
+            "name": "ripple-binary-codec@2.4.0-smartescrow.0",
+            "tagName": "ripple-binary-codec@2.4.0-smartescrow.0",
+            "body": "A beta that adds support for Smart Escrows.\r\n\r\n## What's Changed\r\n* fix: add MPTAmount support in Issue model by @achowdhry-ripple in https://github.com/XRPLF/xrpl.js/pull/2919\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl.js/compare/ripple-binary-codec@2.3.0...ripple-binary-codec@2.4.0-smartescrow.0",
+            "createdAt": "2025-03-26T19:48:05Z",
+            "url": "https://github.com/XRPLF/xrpl.js/releases/tag/ripple-binary-codec%402.4.0-smartescrow.0"
+          },
+          {
+            "name": "ripple-binary-codec@2.3.0-batch.0",
+            "tagName": "ripple-binary-codec@2.3.0-batch.0",
+            "body": "A beta that adds support for Batch.\r\n\r\n## What's Changed\r\n* support DynamicNFT by @yinyiqian1 in https://github.com/XRPLF/xrpl.js/pull/2726\r\n* PermissionedDomain XLS-80d by @ckeshava in https://github.com/XRPLF/xrpl.js/pull/2874\r\n* Deep Freeze XLS-77d by @ckeshava in https://github.com/XRPLF/xrpl.js/pull/2873\r\n* feat: add AMMClawback support by @khancode in https://github.com/XRPLF/xrpl.js/pull/2893\r\n\r\n## New Contributors\r\n* @yinyiqian1 made their first contribution in https://github.com/XRPLF/xrpl.js/pull/2726\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl.js/compare/v4.1.0...ripple-binary-codec@2.3.0-batch.0",
+            "createdAt": "2025-03-26T19:49:25Z",
+            "url": "https://github.com/XRPLF/xrpl.js/releases/tag/ripple-binary-codec%402.3.0-batch.0"
+          }
+        ]
+      },
+      {
+        "name": "xrpl-py",
+        "fullName": "XRPLF/xrpl-py",
+        "description": "A Python library to interact with the XRP Ledger (XRPL) blockchain",
+        "url": "https://github.com/XRPLF/xrpl-py",
+        "stars": 186,
+        "forks": 105,
+        "openIssues": 60,
+        "commits": [
+          {
+            "sha": "dd0e610943389d74c210c1866bff4034b349bb2e",
+            "message": "ci: fix flakiness of snippet tests (hopefully) (#823)",
+            "author": "Mayukha Vadari",
+            "date": "2025-04-15T22:13:17Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/dd0e610943389d74c210c1866bff4034b349bb2e"
+          },
+          {
+            "sha": "f1488c175c368584636ad217479bf96739623142",
+            "message": "fix: increase websocket payload default max size (#795)",
+            "author": "Riku",
+            "date": "2025-04-15T21:16:54Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/f1488c175c368584636ad217479bf96739623142"
+          },
+          {
+            "sha": "caadce3c2722ff98e98c7f12e4f5ec36808171af",
+            "message": "fix: add `MPTCurrency` type instead of `MPTAmount` for `Issue`s (#822)",
+            "author": "Mayukha Vadari",
+            "date": "2025-04-14T20:10:12Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/caadce3c2722ff98e98c7f12e4f5ec36808171af"
+          },
+          {
+            "sha": "c8610c4c264589f826c333c032dd9f3dd46dc776",
+            "message": "Fix the get_latest_open_ledger_sequence method (#820)",
+            "author": "Chenna Keshava B S",
+            "date": "2025-04-14T17:20:35Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/c8610c4c264589f826c333c032dd9f3dd46dc776"
+          },
+          {
+            "sha": "109c413088e24044c3895e37e1c526b8b26d3d16",
+            "message": "fix #805: Upgrade pyproject config file to Poetry v2 (#819)",
+            "author": "Chenna Keshava B S",
+            "date": "2025-03-18T21:44:20Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/109c413088e24044c3895e37e1c526b8b26d3d16"
+          },
+          {
+            "sha": "6979324750d11d5b5262295429d41613eb98f43e",
+            "message": "fix: update error msg for MPT float inputs; fix #796 (#813)",
+            "author": "Chenna Keshava B S",
+            "date": "2025-03-17T18:56:18Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/6979324750d11d5b5262295429d41613eb98f43e"
+          },
+          {
+            "sha": "8c82350e29918e9d381a73180749a71e4e14e166",
+            "message": "chore(deps-dev): bump jinja2 from 3.1.4 to 3.1.6 (#815)",
+            "author": "dependabot[bot]",
+            "date": "2025-03-10T19:31:54Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/8c82350e29918e9d381a73180749a71e4e14e166"
+          },
+          {
+            "sha": "13fdbd8003ddf2aa60e398f8063fed51d138e020",
+            "message": "chore(deps-dev): bump flake8 from 7.1.1 to 7.1.2 (#811)",
+            "author": "dependabot[bot]",
+            "date": "2025-03-03T16:29:44Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/13fdbd8003ddf2aa60e398f8063fed51d138e020"
+          },
+          {
+            "sha": "8eaabcd9712be8da6bda050c7180600703539ccf",
+            "message": "chore(deps-dev): bump aiounittest from 1.4.2 to 1.4.3 (#812)",
+            "author": "dependabot[bot]",
+            "date": "2025-03-03T16:20:20Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/8eaabcd9712be8da6bda050c7180600703539ccf"
+          },
+          {
+            "sha": "1ba1c46c32b66a6fa5c9f048028b3b3baae14397",
+            "message": "fix: add `MPTAmount` support in `Issue` model (#809)",
+            "author": "Omar Khan",
+            "date": "2025-02-26T21:41:08Z",
+            "url": "https://github.com/XRPLF/xrpl-py/commit/1ba1c46c32b66a6fa5c9f048028b3b3baae14397"
+          }
+        ],
+        "pullRequests": [
+          {
+            "number": 832,
+            "title": "[OpenAPI Codegen] Update scaffolding models from rippled-api-spec v0.1.0-b1",
+            "state": "open",
+            "author": "pdp2121",
+            "createdAt": "2025-04-14T20:19:47Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/832"
+          },
+          {
+            "number": 831,
+            "title": "[TEST - PLEASE DISREGARD] Update scaffolding models from rippled-api-spec v1.0.0",
+            "state": "closed",
+            "author": "pdp2121",
+            "createdAt": "2025-04-10T19:50:12Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/831"
+          },
+          {
+            "number": 830,
+            "title": "[TEST - PLEASE DISREGARD] Update scaffolding models from rippled-api-spec v1.0.0",
+            "state": "closed",
+            "author": "pdp2121",
+            "createdAt": "2025-04-10T19:44:54Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/830"
+          },
+          {
+            "number": 829,
+            "title": "Update CHANGELOG.md",
+            "state": "open",
+            "author": "joshuahamsa",
+            "createdAt": "2025-04-10T02:32:17Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/829"
+          },
+          {
+            "number": 828,
+            "title": "Client api key patch 1",
+            "state": "open",
+            "author": "joshuahamsa",
+            "createdAt": "2025-04-10T02:29:10Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/828"
+          },
+          {
+            "number": 827,
+            "title": "Revised PR 763 - Add API key support for JSON-RPC requests",
+            "state": "open",
+            "author": "joshuahamsa",
+            "createdAt": "2025-04-10T01:58:41Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/827"
+          },
+          {
+            "number": 826,
+            "title": "Update scaffolding models from rippled-api-spec v1.0.0",
+            "state": "closed",
+            "author": "pdp2121",
+            "createdAt": "2025-04-10T00:40:03Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/826"
+          },
+          {
+            "number": 825,
+            "title": "[TEST PR - PLEASE DISREGARD] Update models from rippled-api-spec v1.0.0",
+            "state": "closed",
+            "author": "pdp2121",
+            "createdAt": "2025-04-10T00:07:02Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/825"
+          },
+          {
+            "number": 824,
+            "title": "Update rippled.cfg file",
+            "state": "open",
+            "author": "ckeshava",
+            "createdAt": "2025-04-07T22:15:05Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/824"
+          },
+          {
+            "number": 823,
+            "title": "ci: fix flakiness of snippet tests (hopefully)",
+            "state": "closed",
+            "author": "mvadari",
+            "createdAt": "2025-03-31T17:05:27Z",
+            "url": "https://github.com/XRPLF/xrpl-py/pull/823"
+          }
+        ],
+        "releases": [
+          {
+            "name": "4.2.0b0-smart-escrows",
+            "tagName": "4.2.0b0-smart-escrows",
+            "body": "This release is a beta that adds support for Smart Escrows.\r\n\r\n## What's Changed\r\n* fix: Update default cryptographic algorithm in `Wallet` class methods by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/770\r\n* feat: add model validation for types by @mvadari in https://github.com/XRPLF/xrpl-py/pull/708\r\n* fix: add `MPTAmount` support in `Issue` model by @khancode in https://github.com/XRPLF/xrpl-py/pull/809\r\n* fix: update error msg for MPT float inputs; fix #796 by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/813\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl-py/compare/v4.1.0...4.2.0b0-smart-escrows",
+            "createdAt": "2025-03-26T19:44:06Z",
+            "url": "https://github.com/XRPLF/xrpl-py/releases/tag/4.2.0b0-smart-escrows"
+          },
+          {
+            "name": "v4.1.0",
+            "tagName": "v4.1.0",
+            "body": "## What's Changed\r\n* chore(deps-dev): bump mypy from 1.13.0 to 1.14.1 by @dependabot in https://github.com/XRPLF/xrpl-py/pull/789\r\n* [Fix #710] Use network_id to identify faucet_url by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/715\r\n* refactor: replace `darglint` with `pydoclint` by @mvadari in https://github.com/XRPLF/xrpl-py/pull/749\r\n* support DynamicNFT XLS-46 by @yinyiqian1 in https://github.com/XRPLF/xrpl-py/pull/799\r\n* feat: add support for the `simulate` RPC (XLS-69d) by @mvadari in https://github.com/XRPLF/xrpl-py/pull/793\r\n* chore(deps): bump deprecated from 1.2.15 to 1.2.18 by @dependabot in https://github.com/XRPLF/xrpl-py/pull/800\r\n* Support AMMClawback amendment by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/802\r\n* XLS-80d Permissioned Domains by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/773\r\n* Deep freeze XLS-77d by @achowdhry-ripple in https://github.com/XRPLF/xrpl-py/pull/803\r\n\r\n## New Contributors\r\n* @yinyiqian1 made their first contribution in https://github.com/XRPLF/xrpl-py/pull/799\r\n* @achowdhry-ripple made their first contribution in https://github.com/XRPLF/xrpl-py/pull/803\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl-py/compare/v4.0.0...v4.1.0",
+            "createdAt": "2025-02-14T02:19:18Z",
+            "url": "https://github.com/XRPLF/xrpl-py/releases/tag/v4.1.0"
+          },
+          {
+            "name": "v4.0.0",
+            "tagName": "v4.0.0",
+            "body": "### What's Changed\r\n\r\n- Use Github-Actions for PyPI release process by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/760\r\n- fix: docs build by @justinr1234 in https://github.com/XRPLF/xrpl-py/pull/761\r\n- Updates to FeeSettings ledger object by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/758\r\n- Add include_deleted param to ledger_entry API by @Kassaking7 in https://github.com/XRPLF/xrpl-py/pull/721\r\n- Validate the serialization of maximum UINT64 value OracleSet txn by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/756\r\n- Use base 10 serialization for all amount fields in MPT by @khancode\r\n- feat: Multi-Purpose Tokens (MPT) @khancode in https://github.com/XRPLF/xrpl-py/pull/732\r\n\r\n\r\n### Breaking Change\r\n- fix: remove Python 3.7 support to fix dependency installation and use 3.8 as new default by @khancode in https://github.com/XRPLF/xrpl-py/pull/737\r\n\r\n\r\n**Full Changelog:** https://github.com/XRPLF/xrpl-py/compare/v3.0.0...v4.0.0\r\n",
+            "createdAt": "2024-12-21T01:43:12Z",
+            "url": "https://github.com/XRPLF/xrpl-py/releases/tag/v4.0.0"
+          },
+          {
+            "name": "v4.0.0b3",
+            "tagName": "v4.0.0b3",
+            "body": "## What's Changed\r\n* update definitions, rename MPTokenHolder to Holder, remove LockedAmount\r\n* Validate the serialization of maximum UINT64 value OracleSet txn by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/756\r\n* Add `include_deleted` param to ledger_entry API by @Kassaking7 in https://github.com/XRPLF/xrpl-py/pull/721\r\n* Updates to FeeSettings ledger object by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/758\r\n* fix: docs build by @justinr1234 in https://github.com/XRPLF/xrpl-py/pull/761\r\n* fix: read the docs build by @justinr1234 in https://github.com/XRPLF/xrpl-py/pull/762\r\n* Update CHANGELOG.md by @dangell7 in https://github.com/XRPLF/xrpl-py/pull/748\r\n* Use Github-Actions for PyPI release process by @ckeshava in https://github.com/XRPLF/xrpl-py/pull/760\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl-py/compare/v4.0.0b2...v4.0.0b3",
+            "createdAt": "2024-11-11T20:56:00Z",
+            "url": "https://github.com/XRPLF/xrpl-py/releases/tag/v4.0.0b3"
+          },
+          {
+            "name": "v4.0.0b2",
+            "tagName": "v4.0.0b2",
+            "body": "## What's Changed\r\n* Use base 10 serialization for all amount fields in MPT by @khancode\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl-py/compare/v4.0.0b1...v4.0.0b2",
+            "createdAt": "2024-10-16T15:34:45Z",
+            "url": "https://github.com/XRPLF/xrpl-py/releases/tag/v4.0.0b2"
+          }
+        ]
+      },
+      {
+        "name": "xrpl4j",
+        "fullName": "XRPLF/xrpl4j",
+        "description": "A 100% Java implementation to interact with the XRP Ledger.",
+        "url": "https://github.com/XRPLF/xrpl4j",
+        "stars": 107,
+        "forks": 61,
+        "openIssues": 95,
+        "commits": [
+          {
+            "sha": "3153d8d8da5ad1f01619808182fa9b4101754c0d",
+            "message": "Add binary codec support for MPT amounts and STHash192 (#556)",
+            "author": "nkramer44",
+            "date": "2025-03-29T00:17:46Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/3153d8d8da5ad1f01619808182fa9b4101754c0d"
+          },
+          {
+            "sha": "10a6e2a8b82482c7bf9a2cfb339a5f8b8b87df37",
+            "message": "Remove Clio Devnet from ITs (#613)",
+            "author": "David Fuelling",
+            "date": "2025-03-28T21:15:44Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/10a6e2a8b82482c7bf9a2cfb339a5f8b8b87df37"
+          },
+          {
+            "sha": "c0fb168a707f79b0dbf7968b306f7d3531ab5696",
+            "message": "docs(readme): fix path links (#608)",
+            "author": "Guspan Tanadi",
+            "date": "2025-03-27T20:34:29Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/c0fb168a707f79b0dbf7968b306f7d3531ab5696"
+          },
+          {
+            "sha": "85a11568b11aa6f57a485d30eb16b5befa3ed05f",
+            "message": "Fix GitHub actions (#583 and #597)",
+            "author": "David Fuelling",
+            "date": "2025-02-19T20:24:24Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/85a11568b11aa6f57a485d30eb16b5befa3ed05f"
+          },
+          {
+            "sha": "496221a01030af41dde31ed30a7fb4bcf0478954",
+            "message": "Update README.md (#600)",
+            "author": "David Fuelling",
+            "date": "2025-02-18T23:52:01Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/496221a01030af41dde31ed30a7fb4bcf0478954"
+          },
+          {
+            "sha": "c7ed60b81a0743dcd2539cb61d5655b064b3afbe",
+            "message": "Update only `actions/cache` (#598)",
+            "author": "David Fuelling",
+            "date": "2025-02-18T23:43:26Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/c7ed60b81a0743dcd2539cb61d5655b064b3afbe"
+          },
+          {
+            "sha": "4a01fd4736b7aeed9e2d6af4e83806878cd0565a",
+            "message": "Fixes #590 (#594)",
+            "author": "David Fuelling",
+            "date": "2025-02-18T17:14:25Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/4a01fd4736b7aeed9e2d6af4e83806878cd0565a"
+          },
+          {
+            "sha": "a69b5f1acdd93b54dc0c648685875e077cdae433",
+            "message": "Add support for unknown transactions (#569)",
+            "author": "nkramer44",
+            "date": "2025-02-03T21:14:07Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/a69b5f1acdd93b54dc0c648685875e077cdae433"
+          },
+          {
+            "sha": "613339d9f3f6f5401fc59c73f7036da6bf77a8be",
+            "message": "Fix AmmWithdraw LPTokenIn field name (#587)",
+            "author": "nkramer44",
+            "date": "2024-12-18T22:01:55Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/613339d9f3f6f5401fc59c73f7036da6bf77a8be"
+          },
+          {
+            "sha": "501302088dda16d573725a6d05dbf955c95cee88",
+            "message": "Fix fee calculations in its Escrow and NFT ITs (#585)",
+            "author": "David Fuelling",
+            "date": "2024-12-18T16:42:10Z",
+            "url": "https://github.com/XRPLF/xrpl4j/commit/501302088dda16d573725a6d05dbf955c95cee88"
+          }
+        ],
+        "pullRequests": [
+          {
+            "number": 613,
+            "title": "Remove Clio Devnet from ITs",
+            "state": "closed",
+            "author": "sappenin",
+            "createdAt": "2025-03-28T20:48:11Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/613"
+          },
+          {
+            "number": 608,
+            "title": "docs(readme): fix path links",
+            "state": "closed",
+            "author": "guspan-tanadi",
+            "createdAt": "2025-03-10T09:26:48Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/608"
+          },
+          {
+            "number": 606,
+            "title": "Fix it environment logging",
+            "state": "open",
+            "author": "sappenin",
+            "createdAt": "2025-03-06T23:33:45Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/606"
+          },
+          {
+            "number": 605,
+            "title": "Add additional Escrow ITs",
+            "state": "closed",
+            "author": "sappenin",
+            "createdAt": "2025-03-06T00:49:26Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/605"
+          },
+          {
+            "number": 601,
+            "title": "#576: Add support for AMMClawback",
+            "state": "open",
+            "author": "agutierrez0",
+            "createdAt": "2025-02-19T21:46:35Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/601"
+          },
+          {
+            "number": 600,
+            "title": "Update README.md",
+            "state": "closed",
+            "author": "sappenin",
+            "createdAt": "2025-02-18T23:51:44Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/600"
+          },
+          {
+            "number": 598,
+            "title": "Update only `actions/cache`",
+            "state": "closed",
+            "author": "sappenin",
+            "createdAt": "2025-02-18T22:07:16Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/598"
+          },
+          {
+            "number": 597,
+            "title": "Fix GitHub actions (#583)",
+            "state": "closed",
+            "author": "sappenin",
+            "createdAt": "2025-02-18T21:17:07Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/597"
+          },
+          {
+            "number": 596,
+            "title": "Draft: Add support for AMM Clawback",
+            "state": "closed",
+            "author": "agutierrez0",
+            "createdAt": "2025-02-17T14:31:15Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/596"
+          },
+          {
+            "number": 595,
+            "title": "Enhance Transaction serialization and deserialization",
+            "state": "open",
+            "author": "sappenin",
+            "createdAt": "2025-02-16T22:33:21Z",
+            "url": "https://github.com/XRPLF/xrpl4j/pull/595"
+          }
+        ],
+        "releases": [
+          {
+            "name": "v4.0.5",
+            "tagName": "v4.0.5",
+            "body": "## What's Changed\r\n* Fixes #590 (Fails to parse `UnlModify` transactions due to empty Account) by @sappenin in https://github.com/XRPLF/xrpl4j/pull/594\r\n* Update `actions/cache` by @sappenin in https://github.com/XRPLF/xrpl4j/pull/598\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl4j/compare/v4.0.4...v4.0.5",
+            "createdAt": "2025-02-18T23:44:08Z",
+            "url": "https://github.com/XRPLF/xrpl4j/releases/tag/v4.0.5"
+          },
+          {
+            "name": "v4.0.4",
+            "tagName": "v4.0.4",
+            "body": "## What's Changed\r\n* Add support for unknown transactions by @nkramer44 in https://github.com/XRPLF/xrpl4j/pull/569\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl4j/compare/v4.0.3b...v4.0.4",
+            "createdAt": "2025-02-03T21:15:04Z",
+            "url": "https://github.com/XRPLF/xrpl4j/releases/tag/v4.0.4"
+          },
+          {
+            "name": "v4.0.3",
+            "tagName": "v4.0.3b",
+            "body": "## What's Changed\r\n* Fix fee calculations in its Escrow and NFT ITs by @sappenin in https://github.com/XRPLF/xrpl4j/pull/585\r\n* Fix AmmWithdraw LPTokenIn field name by @nkramer44 in https://github.com/XRPLF/xrpl4j/pull/587\r\n* #517 AccountDeleteIT by @agutierrez0 in https://github.com/XRPLF/xrpl4j/pull/568\r\n* Fix broken automation tests by @sappenin in https://github.com/XRPLF/xrpl4j/pull/582\r\n* Add unit tests to validate signature in tx hash by @sappenin in https://github.com/XRPLF/xrpl4j/pull/526\r\n\r\n## New Contributors\r\n* @agutierrez0 made their first contribution in https://github.com/XRPLF/xrpl4j/pull/568\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl4j/compare/v4.0.2...v4.0.3b",
+            "createdAt": "2024-12-18T22:23:15Z",
+            "url": "https://github.com/XRPLF/xrpl4j/releases/tag/v4.0.3b"
+          },
+          {
+            "name": "v4.0.2",
+            "tagName": "v4.0.2",
+            "body": "## What's Changed\r\n* Fix more AccountSet fields by @nkramer44 in https://github.com/XRPLF/xrpl4j/pull/566\r\n  * Add `WalletLocator` and `WalletSize` in `AccountSet` object.\r\n  * Correct `MessageKey` serialization when its value is an  empty string.\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl4j/compare/v4.0.1...v4.0.2",
+            "createdAt": "2024-10-29T23:12:55Z",
+            "url": "https://github.com/XRPLF/xrpl4j/releases/tag/v4.0.2"
+          },
+          {
+            "name": "v4.0.1",
+            "tagName": "v4.0.1",
+            "body": "## What's Changed\r\n* Serialize non-absent AccountSet `domain` values by @nkramer44 in https://github.com/XRPLF/xrpl4j/pull/564\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/xrpl4j/compare/v4.0...v4.0.1",
+            "createdAt": "2024-10-29T16:45:34Z",
+            "url": "https://github.com/XRPLF/xrpl4j/releases/tag/v4.0.1"
+          }
+        ]
+      },
+      {
+        "name": "rippled",
+        "fullName": "XRPLF/rippled",
+        "description": "Decentralized cryptocurrency blockchain daemon implementing the XRP Ledger protocol in C++",
+        "url": "https://github.com/XRPLF/rippled",
+        "stars": 4843,
+        "forks": 1511,
+        "openIssues": 419,
+        "commits": [
+          {
+            "sha": "fa1e25abef7bf12bde87ba23528346853cef88b0",
+            "message": "chore: Small clarification to lsfDefaultRipple comment (#5410)",
+            "author": "Vlad",
+            "date": "2025-04-25T15:21:27Z",
+            "url": "https://github.com/XRPLF/rippled/commit/fa1e25abef7bf12bde87ba23528346853cef88b0"
+          },
+          {
+            "sha": "217ba8dd4dce8740999eed63e687debd0737d69a",
+            "message": "fix: CTID to use correct ledger_index (#5408)",
+            "author": "Denis Angell",
+            "date": "2025-04-24T14:24:10Z",
+            "url": "https://github.com/XRPLF/rippled/commit/217ba8dd4dce8740999eed63e687debd0737d69a"
+          },
+          {
+            "sha": "405f4613d8d3af5e4443aaa8f952c557a7c7a54b",
+            "message": "chore: Run CI on PRs that are Ready or have the \"DraftRunCI\" label (#5400)",
+            "author": "Ed Hennis",
+            "date": "2025-04-11T22:20:59Z",
+            "url": "https://github.com/XRPLF/rippled/commit/405f4613d8d3af5e4443aaa8f952c557a7c7a54b"
+          },
+          {
+            "sha": "cba512068bfc113291f6bf33434a77902cd1bd41",
+            "message": "refactor: Clean up test logging to make it easier to search (#5396)",
+            "author": "Mayukha Vadari",
+            "date": "2025-04-11T09:07:42Z",
+            "url": "https://github.com/XRPLF/rippled/commit/cba512068bfc113291f6bf33434a77902cd1bd41"
+          },
+          {
+            "sha": "1c99ea23d1784323f1413403d44a88af73ea091e",
+            "message": "Temporary disable automatic triggering macOS pipeline (#5397)",
+            "author": "Valentin Balaschenko",
+            "date": "2025-04-10T19:58:29Z",
+            "url": "https://github.com/XRPLF/rippled/commit/1c99ea23d1784323f1413403d44a88af73ea091e"
+          },
+          {
+            "sha": "c4308b216f0cc7b1a33a720b4d38bbc850c4a2f1",
+            "message": "fix: Adds CTID to RPC tx and updates error (#4738)",
+            "author": "Denis Angell",
+            "date": "2025-04-10T12:38:52Z",
+            "url": "https://github.com/XRPLF/rippled/commit/c4308b216f0cc7b1a33a720b4d38bbc850c4a2f1"
+          },
+          {
+            "sha": "aafd2d85251d760bb00862945b9c10556181231b",
+            "message": "Fix: admin RPC webhook queue limit removal and timeout reduction (#5163)",
+            "author": "Wietse Wind",
+            "date": "2025-04-10T06:37:24Z",
+            "url": "https://github.com/XRPLF/rippled/commit/aafd2d85251d760bb00862945b9c10556181231b"
+          },
+          {
+            "sha": "a574ec60232922a96b15089cee979e3296ce7699",
+            "message": "fix: `fixPayChanV1` (#4717)",
+            "author": "Denis Angell",
+            "date": "2025-04-09T22:08:44Z",
+            "url": "https://github.com/XRPLF/rippled/commit/a574ec60232922a96b15089cee979e3296ce7699"
+          },
+          {
+            "sha": "e429455f4d5ce8bdb5f024c447c9b3c656fe302f",
+            "message": "refactor(trivial): reorganize ledger entry tests and helper functions (#5376)",
+            "author": "Mayukha Vadari",
+            "date": "2025-04-09T17:02:03Z",
+            "url": "https://github.com/XRPLF/rippled/commit/e429455f4d5ce8bdb5f024c447c9b3c656fe302f"
+          },
+          {
+            "sha": "7692eeb9a0fc86089b166ea2130aef10dce5e69b",
+            "message": "Instrument proposal, validation and transaction messages (#5348)",
+            "author": "Vito Tumas",
+            "date": "2025-04-09T13:33:17Z",
+            "url": "https://github.com/XRPLF/rippled/commit/7692eeb9a0fc86089b166ea2130aef10dce5e69b"
+          }
+        ],
+        "pullRequests": [
+          {
+            "number": 5410,
+            "title": "Small clarification to lsfDefaultRipple comment.",
+            "state": "closed",
+            "author": "vvysokikh1",
+            "createdAt": "2025-04-24T14:16:21Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5410"
+          },
+          {
+            "number": 5409,
+            "title": "Changes rippled to use east const convention",
+            "state": "open",
+            "author": "Tapanito",
+            "createdAt": "2025-04-24T13:32:37Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5409"
+          },
+          {
+            "number": 5408,
+            "title": "Fix: CTID",
+            "state": "closed",
+            "author": "dangell7",
+            "createdAt": "2025-04-23T23:30:37Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5408"
+          },
+          {
+            "number": 5406,
+            "title": "[DRAFT] Options",
+            "state": "open",
+            "author": "dangell7",
+            "createdAt": "2025-04-20T18:58:00Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5406"
+          },
+          {
+            "number": 5404,
+            "title": "Permission DEX",
+            "state": "open",
+            "author": "shawnxie999",
+            "createdAt": "2025-04-16T14:56:08Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5404"
+          },
+          {
+            "number": 5403,
+            "title": "Fix for peers disconnects problem",
+            "state": "open",
+            "author": "vlntb",
+            "createdAt": "2025-04-15T17:37:34Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5403"
+          },
+          {
+            "number": 5402,
+            "title": "Experiment: Add invariant to enforce directory node population",
+            "state": "open",
+            "author": "ximinez",
+            "createdAt": "2025-04-15T13:11:06Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5402"
+          },
+          {
+            "number": 5401,
+            "title": "DRAFT: chore: Require Draft PRs to opt in to run CI with a label",
+            "state": "closed",
+            "author": "ximinez",
+            "createdAt": "2025-04-11T19:50:18Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5401"
+          },
+          {
+            "number": 5400,
+            "title": "chore: Run CI jobs on PRs that are ready or have the \"DraftRunCI\" label",
+            "state": "closed",
+            "author": "ximinez",
+            "createdAt": "2025-04-11T15:23:41Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5400"
+          },
+          {
+            "number": 5399,
+            "title": "DRAFT: enhanced squelching algorithm to reduce untrusted validator traffic",
+            "state": "open",
+            "author": "Tapanito",
+            "createdAt": "2025-04-11T09:08:18Z",
+            "url": "https://github.com/XRPLF/rippled/pull/5399"
+          }
+        ],
+        "releases": [
+          {
+            "name": "rippled (XRP Ledger server) Version 2.4.0",
+            "tagName": "2.4.0",
+            "body": "# Release Notes\r\n\r\n![XRP](docs/images/xrp-text-mark-black-small@2x.png)\r\n\r\nThis document contains the release notes for `rippled`, the reference server implementation of the XRP Ledger protocol. To learn more about how to build, run or update a `rippled` server, visit https://xrpl.org/install-rippled.html\r\n\r\nHave new ideas? Need help with setting up your node? [Please open an issue here](https://github.com/xrplf/rippled/issues/new/choose).\r\n## Full Changelog\r\n\r\n### Amendments\r\n\r\nThe following amendments are open for voting with this release:\r\n\r\n- **DynamicNFT (XLS-46)** - Adds the ability to mint mutable `NFToken` objects whose URI can be changed. ([#5048](https://github.com/XRPLF/rippled/pull/5048))\r\n- **PermissionedDomains (XLS-80)** - Adds Permissioned Domains, which act as part of broader systems on the XRP Ledger to restrict access to satisfy compliance rules. ([#5161](https://github.com/XRPLF/rippled/pull/5161))\r\n- **DeepFreeze (XLS-77)** - Adds the ability to deep freeze trust lines, enabling token issuers to block the transfer of assets for holders who have been deep frozen. ([#5187](https://github.com/XRPLF/rippled/pull/5187))\r\n- **fixFrozenLPTokenTransfer** - Prohibits the transfer of LP tokens when the associated liquidity pool contains at least one frozen asset. ([#5227](https://github.com/XRPLF/rippled/pull/5227))\r\n- **fixInvalidTxFlags** - Adds transaction flag checking for `CredentialCreate`, `CredentialAccept`, and `CredentialDelete` transactions. ([#5250](https://github.com/XRPLF/rippled/pull/5250))\r\n\r\n\r\n### New Features\r\n\r\n- Added a new `simulate` API method to execute dry runs of transactions and see the simulated metadata. ([#5069](https://github.com/XRPLF/rippled/pull/5069), [#5265](https://github.com/XRPLF/rippled/pull/5265))\r\n- Added the ability to specify MPTs when defining assets in transactions. ([#5200](https://github.com/XRPLF/rippled/pull/5200))\r\n- Added a `state` alias for `ripple_state` in the `ledger_entry` API method. Also refactored `LedgerEntry.cpp` to make it easier to read.  ([#5199](https://github.com/XRPLF/rippled/pull/5199))\r\n- Improved UNL security by enabling validators to set a minimum number of UNL publishers to agree on validators. ([#5112](https://github.com/XRPLF/rippled/pull/5112))\r\n- Updated the XRPL Foundation UNL keys. ([#5289](https://github.com/XRPLF/rippled/pull/5289))\r\n- Added a new XRPL Foundation subdomain to enable a staged migration without modifying the key for the current UNL list. ([#5326](https://github.com/XRPLF/rippled/pull/5326))\r\n- Added support to filter ledger entry types by their canonical names in the `ledger`, `ledger_data`, and `account_objects` API methods. ([#5271](https://github.com/XRPLF/rippled/pull/5271))\r\n- Added detailed logging for each validation and proposal received from the network. ([#5291](https://github.com/XRPLF/rippled/pull/5291))\r\n- Improved git commit hash lookups when checking the version of a `rippled` debug build. Also added git commit hash info when using the `server_info` API method on an admin connection. ([#5225](https://github.com/XRPLF/rippled/pull/5225))\r\n\r\n\r\n### Bug fixes\r\n\r\n- Fixed an issue with overlapping data types in the `Expected` class. ([#5218](https://github.com/XRPLF/rippled/pull/5218))\r\n- Fixed an issue that prevented `rippled` from building on Windows with VS2022. ([#5197](https://github.com/XRPLF/rippled/pull/5197))\r\n- Fixed `server_definitions` prefixes. ([#5231](https://github.com/XRPLF/rippled/pull/5231))\r\n- Added missing dependency installations for generic MasOS runners. ([#5233](https://github.com/XRPLF/rippled/pull/5233))\r\n- Updated deprecated Github actions. ([#5241](https://github.com/XRPLF/rippled/pull/5241))\r\n- Fixed a failing assert scenario when submitting the `connect` admin RPC. ([#5235](https://github.com/XRPLF/rippled/pull/5235))\r\n- Fixed the levelization script to ignore single-line comments during dependency analysis. ([#5194](https://github.com/XRPLF/rippled/pull/5194))\r\n- Fixed the assert name used in `PermissionedDomainDelete`. ([#5245](https://github.com/XRPLF/rippled/pull/5245))\r\n- Fixed macOS unit tests. ([#5196](https://github.com/XRPLF/rippled/pull/5196))\r\n- Fixed an issue with validators not accurately reflecting amendment votes. Also added debug logging of amendment votes. ([#5173](https://github.com/XRPLF/rippled/pull/5173), [#5312](https://github.com/XRPLF/rippled/pull/5312))\r\n- Fixed a potential issue with double-charging fees. ([#5269](https://github.com/XRPLF/rippled/pull/5269))\r\n- Removed the `new parent hash` assert and replaced it with a log message. ([#5313](https://github.com/XRPLF/rippled/pull/5313))\r\n- Fixed an issue that prevented previously-failed inbound ledgers to not be acquired if a new trusted proposal arrived. ([#5318](https://github.com/XRPLF/rippled/pull/5318))\r\n\r\n\r\n### Other Improvements\r\n\r\n- Added unit tests for `AccountID` handling. ([#5174](https://github.com/XRPLF/rippled/pull/5174))\r\n- Added enforced levelization in `libxrpl` with CMake. ([#5199](https://github.com/XRPLF/rippled/pull/5111))\r\n- Updated `libxrpl` and all submodules to use the same compiler options. ([#5228](https://github.com/XRPLF/rippled/pull/5228))\r\n- Added Antithesis instrumentation. ([#5042](https://github.com/XRPLF/rippled/pull/5042), [#5213](https://github.com/XRPLF/rippled/pull/5213))\r\n- Added `rpcName` to the `LEDGER_ENTRY` macro to help prevent future bugs. ([#5202](https://github.com/XRPLF/rippled/pull/5202))\r\n- Updated the contribution guidelines to introduce a new workflow that avoids code freezes. Also added scripts that can be used by maintainers in branch management, and a CI job to check that code is consistent across the three main branches: `master`, `release`, and `develop`. ([#5215](https://github.com/XRPLF/rippled/pull/5215))\r\n- Added unit tests to check for caching issues fixed in `rippled 2.3.0`. ([#5242](https://github.com/XRPLF/rippled/pull/5242))\r\n- Cleaned up the API changelog. ([#5207](https://github.com/XRPLF/rippled/pull/5207))\r\n- Improved logs readability. ([#5251](https://github.com/XRPLF/rippled/pull/5251))\r\n- Updated Visual Studio CI to VS 2022, and added VS Debug builds. ([#5240](https://github.com/XRPLF/rippled/pull/5240))\r\n- Updated the `secp256k1` library to version 0.6.0. ([#5254](https://github.com/XRPLF/rippled/pull/5254))\r\n- Changed the `[port_peer]` parameter in `rippled` example config back to `51235`; also added the recommendation to use the default port of `2459` for new deployments. ([#5290](https://github.com/XRPLF/rippled/pull/5290), [#5299](https://github.com/XRPLF/rippled/pull/5299))\r\n- Improved CI management. ([#5268](https://github.com/XRPLF/rippled/pull/5268))\r\n- Updated the git commit message rules for contributors. ([#5283](https://github.com/XRPLF/rippled/pull/5283))\r\n- Fixed unnecessary `setCurrentThreadName` calls. ([#5280](https://github.com/XRPLF/rippled/pull/5280))\r\n- Added a check to prevent permissioned domains from being created in the event the Permissioned Domains amendement is enabled before the Credentials amendement. ([#5275](https://github.com/XRPLF/rippled/pull/5275))\r\n- Updated Conan dependencies. ([#5256](https://github.com/XRPLF/rippled/pull/5256))\r\n- Fixed minor typos in code comments. ([#5279](https://github.com/XRPLF/rippled/pull/5279))\r\n- Fixed incorrect build instructions. ([#5274](https://github.com/XRPLF/rippled/pull/5274))\r\n- Refactored `rotateWithLock()` to not hold a lock during callbacks. ([#5276](https://github.com/XRPLF/rippled/pull/5276))\r\n- Cleaned up debug logging by combining multiple data points into a single message. ([#5302](https://github.com/XRPLF/rippled/pull/5302))\r\n- Updated build flags to fix performance regressions. ([#5325](https://github.com/XRPLF/rippled/pull/5325))\r\n\r\n\r\n## Credits\r\n\r\nThe following people contributed directly to this release:\r\n\r\n- Aanchal Malhotra <amalhotra@ripple.com>\r\n- Bart Thomee <11445373+bthomee@users.noreply.github.com>\r\n- Bronek Kozicki <brok@incorrekt.com>\r\n- code0xff <ian.jungyong.um@gmail.com>\r\n- Darius Tumas <tokeiito@tokeiito.eu>\r\n- David Fuelling <fuelling@ripple.com>\r\n- Donovan Hide <donovanhide@gmail.com>\r\n- Ed Hennis <ed@ripple.com>\r\n- Elliot Lee <github.public@intelliot.com>\r\n- Javier Romero <jromero@ripple.com>\r\n- Kenny Lei <klei@ripple.com>\r\n- Mark Travis <7728157+mtrippled@users.noreply.github.com>\r\n- Mayukha Vadari <mvadari@gmail.com>\r\n- Michael Legleux <mlegleux@ripple.com>\r\n- Oleksandr <115580134+oleks-rip@users.noreply.github.com>\r\n- Qi Zhao <qzhao@ripple.com>\r\n- Ramkumar Srirengaram Gunasegharan <rgunasegharan@ripple.com>\r\n- Shae Wang <swang@ripple.com>\r\n- Shawn Xie <shawnxie920@gmail.com>\r\n- Sophia Xie <sxie@ripple.com>\r\n- Vijay Khanna Raviraj <vraviraj@ripple.com>\r\n- Vladislav Vysokikh <vvysokikh@gmail.com>\r\n- Xun Zhao <xzhao@ripple.com>\r\n\r\n## Bug Bounties and Responsible Disclosures\r\n\r\nWe welcome reviews of the `rippled` code and urge researchers to responsibly disclose any issues they may find.\r\n\r\nTo report a bug, please send a detailed report to: <bugs@xrpl.org>\r\n\r\n**Full Changelog**: https://github.com/XRPLF/rippled/compare/2.3.1...2.4.0",
+            "createdAt": "2025-03-06T20:43:51Z",
+            "url": "https://github.com/XRPLF/rippled/releases/tag/2.4.0"
+          },
+          {
+            "name": "rippled (XRP Ledger server) Version 2.4.0-b3",
+            "tagName": "2.4.0-b3",
+            "body": "We have recently updated our release process as described in [CONTRIBUTING.md](https://github.com/XRPLF/rippled/blob/2.4.0-b3/CONTRIBUTING.md#releases) to make our release tagging process more flexible. Thus, there were no betas 1 or 2 \"officially\" tagged and released.\r\n\r\n## What's Changed\r\n* test: Add more test cases for Base58 parser by @ximinez in https://github.com/XRPLF/rippled/pull/5174\r\n* refactor: clean up `LedgerEntry.cpp` by @mvadari in https://github.com/XRPLF/rippled/pull/5199\r\n* Enforce levelization in libxrpl with CMake by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5111\r\n* Antithesis instrumentation improvements by @Bronek in https://github.com/XRPLF/rippled/pull/5213\r\n* Add MPTIssue to STIssue by @gregtatcam in https://github.com/XRPLF/rippled/pull/5200\r\n* fix: allow overlapping types in `Expected` by @mvadari in https://github.com/XRPLF/rippled/pull/5218\r\n* [TRIVIAL] Fix Add header for set_difference by @legleux in https://github.com/XRPLF/rippled/pull/5197\r\n* [TRIVIAL] Set version to 2.4.0-b1 by @ximinez in https://github.com/XRPLF/rippled/pull/5222\r\n* refactor: add `rpcName` to `LEDGER_ENTRY` macro by @mvadari in https://github.com/XRPLF/rippled/pull/5202\r\n* Fix `server_definitions`: prefix Uint384 and Uint512 with `Hash` by @shawnxie999 in https://github.com/XRPLF/rippled/pull/5231\r\n* added macos dependency installation by @rrmanukyan in https://github.com/XRPLF/rippled/pull/5233\r\n* XLS-46: DynamicNFT by @tequdev in https://github.com/XRPLF/rippled/pull/5048\r\n* chore: update deprecated Github Actions by @mvadari in https://github.com/XRPLF/rippled/pull/5241\r\n* Permissioned Domains (XLS-80d) by @oleks-rip in https://github.com/XRPLF/rippled/pull/5161\r\n* fix failing assert in `connect` RPC by @mvadari in https://github.com/XRPLF/rippled/pull/5235\r\n* Fix the flag processing of NFTokenModify by @tequdev in https://github.com/XRPLF/rippled/pull/5246\r\n* Fix levelization script to ignore commented includes by @vlntb in https://github.com/XRPLF/rippled/pull/5194\r\n* fix: Use the same compiler options for xrpl.libxrpl and all its submodules by @ximinez in https://github.com/XRPLF/rippled/pull/5228\r\n* [TRIVIAL] Set version to 2.4.0-b2 by @ximinez in https://github.com/XRPLF/rippled/pull/5248\r\n* fix: Errors consistency in LedgerEntry::parsePermissionedDomains() by @kuznetsss in https://github.com/XRPLF/rippled/pull/5252\r\n* TRIVIAL: Update release instructions by @ximinez in https://github.com/XRPLF/rippled/pull/5215\r\n* Unit tests to recreate invalid index logic error by @ximinez in https://github.com/XRPLF/rippled/pull/5242\r\n* Cleanup API-CHANGELOG.md by @Bronek in https://github.com/XRPLF/rippled/pull/5207\r\n* Add a space to the applied log by @tequdev in https://github.com/XRPLF/rippled/pull/5251\r\n* [trivial] Use XRPL_ASSERT in `PermissionedDomainDelete` by @Bronek in https://github.com/XRPLF/rippled/pull/5245\r\n* Implement threshold for the intersection of lists of validators by @Bronek in https://github.com/XRPLF/rippled/pull/5112\r\n* chore: Update Visual Studio CI to VS 2022, and add VS Debug builds by @ximinez in https://github.com/XRPLF/rippled/pull/5240\r\n* Update secp256k1 library to version 0.6.0 by @legleux in https://github.com/XRPLF/rippled/pull/5254\r\n* Fix CI unit tests by @oleks-rip in https://github.com/XRPLF/rippled/pull/5196\r\n* Add RPC \"simulate\" to execute a dry run of a transaction by @mvadari in https://github.com/XRPLF/rippled/pull/5069\r\n* Reverse merge hotfix release 2.3.1 by @ximinez in https://github.com/XRPLF/rippled/pull/5260\r\n* [TRIVIAL] Set version to 2.4.0-b3 in develop by @ximinez in https://github.com/XRPLF/rippled/pull/5261\r\n* Proposed 2.4.0-b3 by @ximinez in https://github.com/XRPLF/rippled/pull/5262\r\n\r\n## New Contributors\r\n* @rrmanukyan made their first contribution in https://github.com/XRPLF/rippled/pull/5233\r\n* @kuznetsss made their first contribution in https://github.com/XRPLF/rippled/pull/5252\r\n\r\n**Full Changelog**: https://github.com/XRPLF/rippled/compare/2.3.1...2.4.0-b3",
+            "createdAt": "2025-01-30T00:19:26Z",
+            "url": "https://github.com/XRPLF/rippled/releases/tag/2.4.0-b3"
+          },
+          {
+            "name": "rippled (XRP Ledger server) Version 2.3.1",
+            "tagName": "2.3.1",
+            "body": "This hotfix release is strongly recommended for any operators currently running 2.3.0, and upgrading from prior versions. It fixes an ongoing issue where normal peer traffic is charged incorrectly, causing peers to be disconnected inappropriately during normal operations. This affects network connectivity and the ability of some UNL validators to reach consensus with the others.\r\n\r\nVersion 2.3.1 does not introduce any new amendments over 2.3.0.\r\n\r\n## What's Changed\r\n* Proposed 2.3.1-rc1: Reduce the peer charges for well-behaved peers by @vlntb in https://github.com/XRPLF/rippled/pull/5243\r\n  * Peer charges are completely different from [transaction cost/fees](https://xrpl.org/docs/concepts/transactions/transaction-cost#beneficiaries-of-the-transaction-cost). They are used to rate limit other `rippled` nodes, and to detect and disconnect peers putting too much demand on the server.\r\n* Proposed version 2.3.1 by @ximinez in https://github.com/XRPLF/rippled/pull/5259\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/rippled/compare/2.3.0...2.3.1\r\n\r\n## Bug Bounties and Responsible Disclosures:\r\n\r\nWe welcome reviews of the `rippled` code and urge researchers to responsibly disclose any issues they may find.\r\n\r\nTo report a bug, please send a detailed report to: <bugs@xrpl.org>",
+            "createdAt": "2025-01-29T14:40:31Z",
+            "url": "https://github.com/XRPLF/rippled/releases/tag/2.3.1"
+          },
+          {
+            "name": "rippled (XRP Ledger server) Version 2.3.1-rc1",
+            "tagName": "2.3.1-rc1",
+            "body": "Pre-release version 2.3.1-rc1 introduces no new amendments. The final hotfix release will be strongly recommended for any operators currently running 2.3.0, and upgrading from prior versions.\r\n\r\n## What's Changed\r\n* This is the release candidate for a hotfix release that fixes an ongoing issue on Mainnet where servers will incorrectly drop peers that should not be dropped. This may be leading to missed validation messages to and from UNL validators.\r\n* Proposed 2.3.1-rc1 by @vlntb in https://github.com/XRPLF/rippled/pull/5243\r\n\r\n\r\n**Full Changelog**: https://github.com/XRPLF/rippled/compare/2.3.0...2.3.1-rc1",
+            "createdAt": "2025-01-28T00:43:14Z",
+            "url": "https://github.com/XRPLF/rippled/releases/tag/2.3.1-rc1"
+          },
+          {
+            "name": "rippled (XRP Ledger server) Version 2.3.0",
+            "tagName": "2.3.0",
+            "body": "## Amendments\r\n\r\nRelease version 2.3.0 introduces several new amendments:\r\n\r\n- fixReducedOffersV2\r\n- NFTokenMintOffer\r\n- fixEnforceNFTokenTrustline\r\n- fixInnerObjTemplate2\r\n- fixNFTokenPageLinks\r\n- Credentials\r\n- MPTokensV1\r\n- AMMClawback\r\n- fixAMMv1_2\r\n\r\n## What's Changed\r\n* Fix compatibility with Conan 2.x by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5001\r\n* Add new command line option to make replaying transactions easier by @Bronek in https://github.com/XRPLF/rippled/pull/5027\r\n* Fix conan typo: by @oleks-rip in https://github.com/XRPLF/rippled/pull/5044\r\n* Additional unit tests for testing deletion of trust lines by @ckeshava in https://github.com/XRPLF/rippled/pull/4886\r\n* Amendment fixReducedOffersV2 fixes issue #4937 by @scottschurr in https://github.com/XRPLF/rippled/pull/5032\r\n* Expose all amendments known by libxrpl by @godexsoft in https://github.com/XRPLF/rippled/pull/5026\r\n* chore: remove repeat words by @todaymoon in https://github.com/XRPLF/rippled/pull/5041\r\n* XLS-52d: NFTokenMintOffer by @tequdev in https://github.com/XRPLF/rippled/pull/4845\r\n* docs: explain how to find a clang-format patch generated by CI by @intelliot in https://github.com/XRPLF/rippled/pull/4521\r\n* Update codebase from boost::string_view into std::string_view by @ckeshava in https://github.com/XRPLF/rippled/pull/4509\r\n* Add the fixEnforceNFTokenTrustline amendment: by @scottschurr in https://github.com/XRPLF/rippled/pull/4946\r\n* Change order of checks in amm_info by @Bronek in https://github.com/XRPLF/rippled/pull/4924\r\n* Finish physical redesign by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/4997\r\n* Proposed 2.3.0-b1 by @seelabs in https://github.com/XRPLF/rippled/pull/5050\r\n* fixInnerObjTemplate2 amendment by @scottschurr in https://github.com/XRPLF/rippled/pull/5047\r\n* fix \"account_nfts\" with unassociated marker returning issue by @yinyiqian1 in https://github.com/XRPLF/rippled/pull/5045\r\n* [TRIVIAL] Bump codecov plugin version to version 4.5.0 by @Bronek in https://github.com/XRPLF/rippled/pull/5055\r\n* Invariant: prevent a deleted account from leaving (most) artifacts on the ledger. by @ximinez in https://github.com/XRPLF/rippled/pull/4663\r\n* fix CTID in tx command returns invalidParams on lowercase hex by @yinyiqian1 in https://github.com/XRPLF/rippled/pull/5049\r\n* chore: remove repeat words by @dashangcun in https://github.com/XRPLF/rippled/pull/5053\r\n* Add xrpld build option and Conan package test by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5052\r\n* Update BUILD.md after PR 5052 by @dangell7 in https://github.com/XRPLF/rippled/pull/5067\r\n* chore: Rename two files from Directory* to Dir*: by @scottschurr in https://github.com/XRPLF/rippled/pull/5058\r\n* chore: Add comments to SignerEntries.h by @scottschurr in https://github.com/XRPLF/rippled/pull/5059\r\n* fix account_objects to disallow filtering by types that an account ca… by @yinyiqian1 in https://github.com/XRPLF/rippled/pull/5056\r\n* [TRIVIAL] Fix NuDB build error by @ximinez in https://github.com/XRPLF/rippled/pull/5061\r\n* [TRIVIAL] Ensure all sorting is ASCII-order consistently across platforms by @ximinez in https://github.com/XRPLF/rippled/pull/5072\r\n* fix: change error for invalid `feature` param in `feature` RPC by @mvadari in https://github.com/XRPLF/rippled/pull/5063\r\n* [Trivial] Remove unused constants from resource/Fees.h by @scottschurr in https://github.com/XRPLF/rippled/pull/4856\r\n* docs: Document the process for merging pull requests by @ximinez in https://github.com/XRPLF/rippled/pull/5010\r\n* Merge master into develop  by @Bronek in https://github.com/XRPLF/rippled/pull/5085\r\n* Proposed 2.3.0-b2 by @ximinez in https://github.com/XRPLF/rippled/pull/5086\r\n* Fix crash inside `OverlayImpl` loops over `ids_` by @Bronek in https://github.com/XRPLF/rippled/pull/5071\r\n* chore: Update gcovr EXCLUDE by @Bronek in https://github.com/XRPLF/rippled/pull/5084\r\n* Remove shards by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5066\r\n* refactor: Factor out Transactor::trapTransaction by @Bronek in https://github.com/XRPLF/rippled/pull/5087\r\n* Address rare corruption of NFTokenPage linked list by @scottschurr in https://github.com/XRPLF/rippled/pull/4945\r\n* chore: Fix documentation generation job: by @ximinez in https://github.com/XRPLF/rippled/pull/5091\r\n* Remove reporting mode by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5092\r\n* Remove dead headers by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5081\r\n* Update options documentation by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5083\r\n* Merge master (2.2.2) into develop by @ximinez in https://github.com/XRPLF/rippled/pull/5117\r\n* Retry RPC commands to try to fix MacOS CI jobs by @ximinez in https://github.com/XRPLF/rippled/pull/5120\r\n* Merge 2.2.3 into `develop` by @intelliot in https://github.com/XRPLF/rippled/pull/5134\r\n* chore: fix some comments by @luozexuan in https://github.com/XRPLF/rippled/pull/5094\r\n* updates to book_changes RPC command by @ckeshava in https://github.com/XRPLF/rippled/pull/5096\r\n* Fix order of SQLite PRAGMAS to allow configurable page_size by @vvysokikh1 in https://github.com/XRPLF/rippled/pull/5140\r\n* SQLite: Allow configurable sqlite database pragma variables. by @dangell7 in https://github.com/XRPLF/rippled/pull/5135\r\n* Proposed 2.3.0-b4 by @intelliot in https://github.com/XRPLF/rippled/pull/5144\r\n* docs: clean up API-CHANGELOG.md by @intelliot in https://github.com/XRPLF/rippled/pull/5064\r\n* Elaborate Error Message for rpcInternal by @ckeshava in https://github.com/XRPLF/rippled/pull/4959\r\n* Reformat code with clang-format-18 by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5157\r\n* Consolidate definitions of fields, objects, transactions, and features by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5122\r\n* Introduce MPT support (XLS-33d): by @gregtatcam in https://github.com/XRPLF/rippled/pull/5143\r\n* fixes small typos in RELEASENOTES.md by @BobConanDev in https://github.com/XRPLF/rippled/pull/5154\r\n* fix account_objects with invalid marker do not return an error by @yinyiqian1 in https://github.com/XRPLF/rippled/pull/5046\r\n* protobuf dependencies are missing on the clean machine by @vlntb in https://github.com/XRPLF/rippled/pull/5156\r\n* Add hubs.xrpkuwait.com to bootstrap by @alloynetworks in https://github.com/XRPLF/rippled/pull/5169\r\n* Add AMMClawback Transaction (XLS-0073d) by @yinyiqian1 in https://github.com/XRPLF/rippled/pull/5142\r\n* Fix unity build by @gregtatcam in https://github.com/XRPLF/rippled/pull/5179\r\n* Add fixAMMv1_2 amendment by @gregtatcam in https://github.com/XRPLF/rippled/pull/5176\r\n* Fix tokens comparison in Payment for temREDUNDANT error by @gregtatcam in https://github.com/XRPLF/rippled/pull/5172\r\n* XLS-70d Credentials by @oleks-rip in https://github.com/XRPLF/rippled/pull/5103\r\n* Fix deadlock in InboundLedgers and NetworkOPs by @Bronek in https://github.com/XRPLF/rippled/pull/5124\r\n* Bug: Replace Uint192 with Hash192 in server_definitions response by @shawnxie999 in https://github.com/XRPLF/rippled/pull/5177\r\n* Proposed 2.3.0-rc1 by @ximinez in https://github.com/XRPLF/rippled/pull/5183\r\n* Fix ledger_entry crash on invalid request by @Bronek in https://github.com/XRPLF/rippled/pull/5189\r\n* fix: include `index` in `server_definitions` RPC by @mvadari in https://github.com/XRPLF/rippled/pull/5190\r\n* Proposed 2.3.0-rc2 by @ximinez in https://github.com/XRPLF/rippled/pull/5191\r\n* Fix  checking ammID field of account by @oleks-rip in https://github.com/XRPLF/rippled/pull/5188\r\n* Add a new serialized type: STNumber by @thejohnfreeman in https://github.com/XRPLF/rippled/pull/5121\r\n* move tfClawTwoAssets check to preflight by @yinyiqian1 in https://github.com/XRPLF/rippled/pull/5201\r\n* Proposed version 2.3.0 by @intelliot in https://github.com/XRPLF/rippled/pull/5204\r\n\r\n## New Contributors\r\n* @todaymoon made their first contribution in https://github.com/XRPLF/rippled/pull/5041\r\n* @tequdev made their first contribution in https://github.com/XRPLF/rippled/pull/4845\r\n* @yinyiqian1 made their first contribution in https://github.com/XRPLF/rippled/pull/5045\r\n* @dashangcun made their first contribution in https://github.com/XRPLF/rippled/pull/5053\r\n* @luozexuan made their first contribution in https://github.com/XRPLF/rippled/pull/5094\r\n* @vvysokikh1 made their first contribution in https://github.com/XRPLF/rippled/pull/5140\r\n* @BobConanDev made their first contribution in https://github.com/XRPLF/rippled/pull/5154\r\n* @vlntb made their first contribution in https://github.com/XRPLF/rippled/pull/5156\r\n\r\n**Full Changelog**: https://github.com/XRPLF/rippled/compare/2.2.3...2.3.0",
+            "createdAt": "2024-11-25T21:27:20Z",
+            "url": "https://github.com/XRPLF/rippled/releases/tag/2.3.0"
+          }
+        ]
+      },
+      {
+        "name": "XRPL-Standards",
+        "fullName": "XRPLF/XRPL-Standards",
+        "description": "XLS: XRP(L) community defined Suggestions, Proposals, RFCs / Standards / Drafts & discussions, to be added to the core protocol, used for platform & apps devemopment, etc.",
+        "url": "https://github.com/XRPLF/XRPL-Standards",
+        "stars": 217,
+        "forks": 546,
+        "openIssues": 15,
+        "commits": [
+          {
+            "sha": "2fc7469a53962e89271c7ca7bcbba673638b1ffd",
+            "message": "XLS-77d Deep freeze (#260)",
+            "author": "Shawn Xie",
+            "date": "2025-04-02T21:52:35Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/2fc7469a53962e89271c7ca7bcbba673638b1ffd"
+          },
+          {
+            "sha": "eed3662b323d0f044d5e33dd3d78732add80b13a",
+            "message": "XLS-0065d Single Asset Vault (#239)",
+            "author": "Vito Tumas",
+            "date": "2025-02-28T01:32:28Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/eed3662b323d0f044d5e33dd3d78732add80b13a"
+          },
+          {
+            "sha": "856f7fe09e71dbc37a329c42da58104b8421ab7a",
+            "message": "fix: remove the `d` from amendments that are live/up for voting (#266)",
+            "author": "Mayukha Vadari",
+            "date": "2025-02-10T18:33:43Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/856f7fe09e71dbc37a329c42da58104b8421ab7a"
+          },
+          {
+            "sha": "8dc765d72b53747706335c062eb9c209daf4114e",
+            "message": "XLS-0033d (MPT): Fix math display (#247)",
+            "author": "David Fuelling",
+            "date": "2025-01-28T22:19:42Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/8dc765d72b53747706335c062eb9c209daf4114e"
+          },
+          {
+            "sha": "497d86ca1a73407546d0f35ad7a396bd6cd8653e",
+            "message": "XLS-56d: Atomic/Batch Transactions (#197)",
+            "author": "Mayukha Vadari",
+            "date": "2025-01-23T21:47:27Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/497d86ca1a73407546d0f35ad7a396bd6cd8653e"
+          },
+          {
+            "sha": "797d8e326c4546dec9f9472ef9fa706f9f5559b3",
+            "message": "XLS-0033d (MPT): Clarify rippled code changes related to MPT (#246)",
+            "author": "David Fuelling",
+            "date": "2025-01-18T00:15:45Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/797d8e326c4546dec9f9472ef9fa706f9f5559b3"
+          },
+          {
+            "sha": "2874c73cad3075c5a8c0fd5cf632ed4f009c8341",
+            "message": "XLS-0033d (MPT): Clarify MPTAmount ranges (#244)",
+            "author": "David Fuelling",
+            "date": "2025-01-16T23:16:32Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/2874c73cad3075c5a8c0fd5cf632ed4f009c8341"
+          },
+          {
+            "sha": "eaac7230e61fae8c0037b2ca50ad4d8eaccb06e8",
+            "message": "XLS-52: NFTokenMintOffer Specification (#224)",
+            "author": "tequ",
+            "date": "2024-11-07T00:44:56Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/eaac7230e61fae8c0037b2ca50ad4d8eaccb06e8"
+          },
+          {
+            "sha": "b5185a523f5bca5524bacf5b14590b2a9bdbe503",
+            "message": "XLS-0073d AMMClawback (#233)",
+            "author": "yinyiqian1",
+            "date": "2024-11-04T22:21:59Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/b5185a523f5bca5524bacf5b14590b2a9bdbe503"
+          },
+          {
+            "sha": "e1872a663c703db3300ad038a02f9a8c9328fb96",
+            "message": "Fix JSON type for `LedgerEntryType` (#243)",
+            "author": "David Fuelling",
+            "date": "2024-10-30T17:32:43Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/commit/e1872a663c703db3300ad038a02f9a8c9328fb96"
+          }
+        ],
+        "pullRequests": [
+          {
+            "number": 281,
+            "title": "Perm dex",
+            "state": "open",
+            "author": "shawnxie999",
+            "createdAt": "2025-04-22T17:02:28Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/281"
+          },
+          {
+            "number": 275,
+            "title": "Minor changes to Single Asset Vault specification.",
+            "state": "open",
+            "author": "Tapanito",
+            "createdAt": "2025-03-13T13:09:03Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/275"
+          },
+          {
+            "number": 274,
+            "title": "XLS-64d `pseudo-account`",
+            "state": "open",
+            "author": "Tapanito",
+            "createdAt": "2025-03-04T11:36:55Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/274"
+          },
+          {
+            "number": 273,
+            "title": "XLS-90d Permissioned Domain for Multi-Purpose Token",
+            "state": "open",
+            "author": "Tapanito",
+            "createdAt": "2025-03-04T09:14:51Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/273"
+          },
+          {
+            "number": 272,
+            "title": "XLS-85d Token Escrow",
+            "state": "open",
+            "author": "dangell7",
+            "createdAt": "2025-02-26T16:50:55Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/272"
+          },
+          {
+            "number": 266,
+            "title": "fix: remove the `d` from amendments that are live/up for voting",
+            "state": "closed",
+            "author": "mvadari",
+            "createdAt": "2025-01-31T23:26:50Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/266"
+          },
+          {
+            "number": 263,
+            "title": "Add PermissionedDomain support for MPTs.",
+            "state": "closed",
+            "author": "Tapanito",
+            "createdAt": "2025-01-27T13:06:16Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/263"
+          },
+          {
+            "number": 260,
+            "title": "XLS-77d Deep freeze",
+            "state": "closed",
+            "author": "shawnxie999",
+            "createdAt": "2024-12-17T16:29:38Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/260"
+          },
+          {
+            "number": 257,
+            "title": "XLS-74d and XLS-75d: Account Permissions",
+            "state": "open",
+            "author": "mvadari",
+            "createdAt": "2024-12-11T01:07:44Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/257"
+          },
+          {
+            "number": 256,
+            "title": "XLS-81d: Permissioned DEX",
+            "state": "open",
+            "author": "mvadari",
+            "createdAt": "2024-12-06T21:40:26Z",
+            "url": "https://github.com/XRPLF/XRPL-Standards/pull/256"
+          }
+        ],
+        "releases": []
+      }
+    ],
+    "totalCommits": 50,
+    "totalPRs": 50,
+    "totalIssues": 699,
+    "totalReleases": 20,
+    "significantUpdates": []
+  },
+  "rssData": {
+    "items": []
+  }
+}

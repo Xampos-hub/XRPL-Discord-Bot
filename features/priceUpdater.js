@@ -93,3 +93,8 @@
 
       ws.on('error', console.error);
   }
+
+  export default {
+      name: 'price',
+      // ...rest of your command properties
+  };
