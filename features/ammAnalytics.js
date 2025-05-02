@@ -214,7 +214,8 @@ async reconnectClient() {
     }
 }
 
-async fetchAMMData() {
+    async fetchAMMData() 
+{
     try {
         // Check if client is connected before making requests
         if (!this.client.isConnected()) {
@@ -247,7 +248,8 @@ async fetchAMMData() {
     }
 }
 
-async sendUpdate() {
+async sendUpdate() 
+{
     try {
         const ammData = await this.fetchAMMData();
         

@@ -8,6 +8,17 @@ class XRPLHelper {
 
     async connect() {
         this.client = new xrpl.Client(config.xrplNetwork);
+        
+        // Add reconnect event handler
+        this.client.on('reconnect', () => {
+            console.log('XRPL client reconnecting...');
+        });
+        
+        // Add error handler
+        this.client.on('error', (error) => {
+            console.error('XRPL client error:', error);
+        });
+        
         await this.client.connect();
     }
 

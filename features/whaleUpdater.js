@@ -3,6 +3,12 @@ import xrpl from 'xrpl';
 
 export async function startWhaleUpdater(client, channelId) {
     const xrplClient = new xrpl.Client("wss://s1.ripple.com");
+    
+    // Add reconnect event handler
+    xrplClient.on('reconnect', () => {
+        console.log('XRPL client reconnecting in whale updater...');
+    });
+    
     await xrplClient.connect();
 
     console.log('Whale alert monitoring started');

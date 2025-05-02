@@ -94,6 +94,8 @@ import * as xrpl from 'xrpl';
 import { ValidatorHealthMonitor } from './src/services/validatorHealthMonitor.js';
 import { DeveloperEcosystemPulse } from './src/services/developerEcosystemPulse.js';
 import serviceManager from './src/services/serviceManager.js';
+import { REST } from 'discord.js';
+import { Routes } from 'discord-api-types/v10';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -157,6 +159,36 @@ for (const file of commandFiles) {
         console.error(`Error loading command from ${filePath}:`, error);
     }
 }
+
+const deployCommands = async () => {
+  try {
+    const commands = [];
+    
+    // Add all your remaining commands to the array
+    client.commands.forEach(command => {
+      if (command.data) {
+        commands.push(command.data.toJSON());
+      }
+    });
+
+    console.log(`Deploying ${commands.length} commands...`);
+
+    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+    
+    // Replace CLIENT_ID with your actual client ID
+    await rest.put(
+      Routes.applicationCommands(process.env.CLIENT_ID),
+      { body: commands }
+    );
+
+    console.log('Successfully redeployed application commands');
+  } catch (error) {
+    console.error('Error deploying commands:', error);
+  }
+};
+
+// Call the function
+await deployCommands();
 
 // Direct balance check without asking for address
 async function handleDirectBalanceCheck(interaction, walletAddress) {
@@ -1160,7 +1192,7 @@ client.on('interactionCreate', async interaction => {
                     .catch(error => {
                         console.error("Failed to login with environment variable:", error.message);
                         
-                        // Uncomment and replace YOUR_TOKEN_HERE with your actual token
+                        // Never hardcode your token - use environment variables
                         // return client.login("YOUR_TOKEN_HERE");
                     });
                 
