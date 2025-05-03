@@ -96,6 +96,7 @@ import { DeveloperEcosystemPulse } from './src/services/developerEcosystemPulse.
 import serviceManager from './src/services/serviceManager.js';
 import { REST } from 'discord.js';
 import { Routes } from 'discord-api-types/v10';
+import { getServerDonationSetup } from './features/tipSystem.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1019,6 +1020,106 @@ client.on('interactionCreate', async interaction => {
                                     ephemeral: true
                                 });
                             }
+                            if (interaction.customId.startsWith('pay_qr_') ||
+                                interaction.customId.startsWith('pay_xaman_') ||
+                                interaction.customId.startsWith('pay_wallet_') ||
+                                interaction.customId.startsWith('confirm_payment_')) {
+                                const tipCommand = client.commands.get('tip');
+                                await tipCommand.handleTipButtonInteraction(interaction);
+                            }
+                            if (interaction.customId.startsWith('tip_')) {
+                                const parts = interaction.customId.split('_');
+                                const action = parts[1];
+                                const address = parts[2];
+                                
+                                if (action === 'xaman') {
+                                    // Create Xaman payment link
+                                    const xamanLink = `https://xumm.app/detect/xrp?to=${address}`;
+                                    
+                                    await interaction.reply({
+                                        content: `**Pay with Xaman Wallet**\n\nOpen this link or scan the QR code to donate to the server:\n${xamanLink}`,
+                                        ephemeral: true
+                                    });
+                                } 
+                                else if (action === 'qr') {
+                                    // Generate QR code for wallet address
+                                    const QRCode = await import('qrcode');
+                                    const { AttachmentBuilder } = await import('discord.js');
+                                    
+                                    const qrBuffer = await QRCode.toBuffer(`https://xumm.app/detect/xrp?to=${address}`);
+                                    const qrAttachment = new AttachmentBuilder(qrBuffer, { name: 'donation_qr.png' });
+                                    
+                                    await interaction.reply({
+                                        content: `**Scan this QR code to donate**\nAddress: \`${address}\``,
+                                        files: [qrAttachment],
+                                        ephemeral: true
+                                    });
+                                }
+                                else if (action === 'custom') {
+                                    // Show modal for custom amount
+                                    const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = await import('discord.js');
+                                    
+                                    const modal = new ModalBuilder()
+                                        .setCustomId(`tip_custom_amount_${address}`)
+                                        .setTitle('Enter Custom Amount');
+                                        
+                                    const amountInput = new TextInputBuilder()
+                                        .setCustomId('tip_amount')
+                                        .setLabel('Amount in XRP')
+                                        .setStyle(TextInputStyle.Short)
+                                        .setPlaceholder('Enter amount (e.g. 20)')
+                                        .setRequired(true);
+                                        
+                                    const amountRow = new ActionRowBuilder().addComponents(amountInput);
+                                    modal.addComponents(amountRow);
+                                    
+                                    await interaction.showModal(modal);
+                                }
+                                else if (action === 'wallet') {
+                                    // Show connect wallet message
+                                    await interaction.reply({
+                                        content: "To use your connected wallet, please make sure you've connected a wallet using the `/wallet` command first.",
+                                        ephemeral: true
+                                    });
+                                }
+                                else if (!isNaN(action)) {
+                                    // It's a numeric amount
+                                    const amount = action;
+                                    const dropsAmount = String(Number(amount) * 1000000);
+                                    const xamanLink = `https://xumm.app/detect/xrp?to=${address}&amount=${dropsAmount}`;
+                                    
+                                    await interaction.reply({
+                                        content: `**Donate ${amount} XRP**\n\nOpen this link to send your donation:\n${xamanLink}`,
+                                        ephemeral: true
+                                    });
+                                }
+                                
+                                return; // Important: return to prevent continuing to other handlers
+                            }
+                            // Handle custom tip amount modal
+                            if (interaction.customId.startsWith('tip_custom_amount_')) {
+                                const address = interaction.customId.replace('tip_custom_amount_', '');
+                                const amount = interaction.fields.getTextInputValue('tip_amount');
+                                
+                                // Validate amount
+                                const numAmount = parseFloat(amount);
+                                if (isNaN(numAmount) || numAmount <= 0) {
+                                    await interaction.reply({
+                                        content: 'Please enter a valid amount greater than 0.',
+                                        ephemeral: true
+                                    });
+                                    return;
+                                }
+                                
+                                // Create payment link
+                                const dropsAmount = String(numAmount * 1000000);
+                                const xamanLink = `https://xumm.app/detect/xrp?to=${address}&amount=${dropsAmount}`;
+                                
+                                await interaction.reply({
+                                    content: `**Donate ${numAmount} XRP**\n\nOpen this link to send your donation:\n${xamanLink}`,
+                                    ephemeral: true
+                                });
+                            }
                         } catch (error) {
                             console.error('Error handling button interaction:', error);
                             try {
@@ -1042,6 +1143,16 @@ client.on('interactionCreate', async interaction => {
                     if (interaction.isModalSubmit()) {
                         try {
                             console.log(`Modal submitted: ${interaction.customId}`);
+                            
+                            if (interaction.customId === 'setup_donations_debug') {
+                                console.log("Debug modal submitted!");
+                                const address = interaction.fields.getTextInputValue('donation_address');
+                                await interaction.reply({
+                                    content: `Donation address received: ${address}`,
+                                    ephemeral: true
+                                });
+                                return; // Add return to prevent fall-through
+                            }
                             
                             switch (interaction.customId) {
                                 case 'balance_modal':
@@ -1092,6 +1203,72 @@ client.on('interactionCreate', async interaction => {
                                 case 'nft_compare_modal':
                                     await processNFTCompare(interaction);
                                     break;
+                                case 'setup_donations_modal':
+                                    try {
+                                        console.log("Donation setup modal submitted");
+                                        const donationAddress = interaction.fields.getTextInputValue('donation_address');
+                                        const purpose = interaction.fields.getTextInputValue('donation_purpose');
+                                        const message = interaction.fields.getTextInputValue('donation_message') || "";
+                                        
+                                        // Validate XRPL address
+                                        if (!/^r[1-9A-HJ-NP-Za-km-z]{24,34}$/.test(donationAddress)) {
+                                            await interaction.reply({
+                                                content: 'Invalid XRPL address format. Please try again with a valid address.',
+                                                ephemeral: true
+                                            });
+                                            return;
+                                        }
+                                        
+                                        // Save donation setup
+                                        const serverId = interaction.guildId;
+                                        
+                                        // Read current data
+                                        const fs = await import('fs/promises');
+                                        const path = await import('path');
+                                        const { fileURLToPath } = await import('url');
+                                        
+                                        const __filename = fileURLToPath(import.meta.url);
+                                        const __dirname = path.dirname(__filename);
+                                        const DONATIONS_FILE = path.join(__dirname, 'data', 'donations.json');
+                                        
+                                        let donations;
+                                        try {
+                                            const data = await fs.readFile(DONATIONS_FILE, 'utf8');
+                                            donations = JSON.parse(data);
+                                        } catch (error) {
+                                            // If file doesn't exist or is invalid, start fresh
+                                            donations = { servers: {} };
+                                        }
+                                        
+                                        // Update with new info
+                                        donations.servers[serverId] = {
+                                            address: donationAddress,
+                                            purpose: purpose,
+                                            message: message,
+                                            setupBy: interaction.user.id,
+                                            setupDate: new Date().toISOString()
+                                        };
+                                        
+                                        // Write back to file
+                                        await fs.writeFile(DONATIONS_FILE, JSON.stringify(donations, null, 2));
+                                        
+                                        // Reply with success
+                                        await interaction.reply({
+                                            content: `✅ Donation setup complete!\n**Address:** \`${donationAddress}\`\n**Purpose:** ${purpose}\n\nUsers can now use the \`/tip\` command to support the server.`,
+                                            ephemeral: true
+                                        });
+                                    } catch (error) {
+                                        console.error('Error processing donation setup:', error);
+                                        await interaction.reply({
+                                            content: 'There was an error setting up donations. Please try again.',
+                                            ephemeral: true
+                                        });
+                                    }
+                                    break;
+                                case 'tip_custom_amount_modal':
+                                    const tipCommand = client.commands.get('tip');
+                                    await tipCommand.handleTipModalSubmission(interaction);
+                                    break;
                             }
                             
                             if (interaction.customId.startsWith('swap_amount_modal_')) {
@@ -1114,6 +1291,10 @@ client.on('interactionCreate', async interaction => {
                                 await processSwapAmount(interaction, fromCbdcId, toCbdcId);
                             }
                             
+                            if (interaction.customId === 'setup_donations_modal') {
+                                const setupCommand = client.commands.get('setup-donations');
+                                await setupCommand.handleDonationSetup(interaction);
+                            }
                         } catch (error) {
                             console.error('Error handling modal submit:', error);
                             try {
@@ -1145,6 +1326,10 @@ client.on('interactionCreate', async interaction => {
                                 break;
                             }
                             
+                            if (interaction.customId === 'donation_channel_select') {
+                                const setupCommand = client.commands.get('setup-donations');
+                                await setupCommand.handleNotificationChannelSelect(interaction);
+                            }
                         }
                         
                         // For custom ID patterns that don't fit in the switch
@@ -1155,7 +1340,6 @@ client.on('interactionCreate', async interaction => {
                         }
                     }
                 });
-                
                 // Handle token selection interface
                 async function showTokenSelectionInterface(interaction, selectionType) {
                     try {
